@@ -23,7 +23,7 @@ func requestAPI(method string, namespace string) []byte {
 	response, _ := client.Do(request)
 
 	if response == nil {
-		fmt.Println(bold("Connection refused"))
+		fmt.Println("Connection refused")
 		os.Exit(1)
 		return body
 	} else {
@@ -32,7 +32,7 @@ func requestAPI(method string, namespace string) []byte {
 		defer response.Body.Close()
 
 		if status != 200 {
-			fmt.Println(bold(httpStatus(status)))
+			fmt.Println(httpStatus(status))
 			os.Exit(1)
 		}
 

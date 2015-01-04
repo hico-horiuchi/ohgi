@@ -19,7 +19,7 @@ func loadConfig() config {
 	contents, _ := ioutil.ReadFile(os.Getenv("HOME") + "/.sensu.json")
 
 	if contents == nil {
-		fmt.Println(bold("Cannot open ~/.sensu.json"))
+		fmt.Println("Cannot open ~/.sensu.json")
 		os.Exit(1)
 	}
 
