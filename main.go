@@ -11,7 +11,11 @@ const (
 )
 
 func main() {
-	rootCmd := &cobra.Command{Use: "ohgi"}
+	rootCmd := &cobra.Command{
+		Use:   "ohgi",
+		Short: "Sensu command-line tool by golang",
+		Long:  "Sensu command-line tool by golang",
+	}
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "events",
@@ -24,8 +28,8 @@ func main() {
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",
-		Short: "Print ohgi revision",
-		Long:  "Print ohgi revision",
+		Short: "Print git revision of ohgi",
+		Long:  "Print git revision of ohgi",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Printf("ohgi revision %s\n", OHGI_REVISION)
 		},

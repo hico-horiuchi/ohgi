@@ -22,12 +22,14 @@
 
 #### Usage
 
+    Sensu command-line tool by golang
+    
     Usage:
     ohgi [command]
     
     Available Commands:
     events                    List and resolve current events
-    version                   Print ohgi revision
+    version                   Print git revision of ohgi
     help [command]            Help about any command
     
     Use "ohgi help [command]" for more information about that command.
