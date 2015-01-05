@@ -23,6 +23,7 @@
 #### Usage
 
     Sensu command-line tool by golang
+    https://github.com/hico-horiuchi/ohgi
     
     Usage:
     ohgi [command]

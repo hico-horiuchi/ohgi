@@ -14,7 +14,7 @@ func main() {
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
 		Short: "Sensu command-line tool by golang",
-		Long:  "Sensu command-line tool by golang",
+		Long:  "Sensu command-line tool by golang\nhttps://github.com/hico-horiuchi/ohgi",
 	}
 
 	rootCmd.AddCommand(&cobra.Command{
@@ -34,5 +34,6 @@ func main() {
 			fmt.Printf("ohgi revision %s\n", OHGI_REVISION)
 		},
 	})
+
 	rootCmd.Execute()
 }
