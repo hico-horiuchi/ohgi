@@ -26,11 +26,11 @@
     https://github.com/hico-horiuchi/ohgi
     
     Usage:
-    ohgi [command]
+      ohgi [command]
     
-    Available Commands:
-    events                    List and resolve current events
-    version                   Print git revision of ohgi
-    help [command]            Help about any command
+    Available Commands: 
+      events [-c client]        List and resolve current events
+      version                   Print git revision of ohgi
+      help [command]            Help about any command    Available Commands:
     
     Use "ohgi help [command]" for more information about that command.

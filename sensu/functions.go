@@ -19,6 +19,8 @@ func httpStatus(status int) string {
 	switch status {
 	case 401:
 		return strconv.Itoa(status) + " Unauthorized"
+	case 500:
+		return strconv.Itoa(status) + " Internal Server Error"
 	}
 	return ""
 }

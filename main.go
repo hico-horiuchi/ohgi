@@ -11,20 +11,28 @@ const (
 )
 
 func main() {
+	var client string
+
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
 		Short: "Sensu command-line tool by golang",
 		Long:  "Sensu command-line tool by golang\nhttps://github.com/hico-horiuchi/ohgi",
 	}
 
-	rootCmd.AddCommand(&cobra.Command{
-		Use:   "events",
+	eventsCmd := &cobra.Command{
+		Use:   "events [-c client]",
 		Short: "List and resolve current events",
 		Long:  "List and resolve current events",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("%s", sensu.GetEvents())
+			if client != "" {
+				fmt.Printf("%s", sensu.GetEventsClient(client))
+			} else {
+				fmt.Printf("%s", sensu.GetEvents())
+			}
 		},
-	})
+	}
+	eventsCmd.Flags().StringVarP(&client, "client", "c", "", "Returns the list of current events for a client")
+	rootCmd.AddCommand(eventsCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",
