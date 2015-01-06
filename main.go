@@ -6,9 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	OHGI_REVISION = "__OHGI_REVISION__"
-)
+var revision string
 
 func main() {
 	var client string
@@ -39,7 +37,7 @@ func main() {
 		Short: "Print git revision of ohgi",
 		Long:  "Print git revision of ohgi",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("ohgi revision %s\n", OHGI_REVISION)
+			fmt.Printf("ohgi revision %s\n", revision)
 		},
 	})
 
