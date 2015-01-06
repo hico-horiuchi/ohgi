@@ -9,32 +9,27 @@ import (
 var revision string
 
 func main() {
-	var client string
-	var check string
-
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
 		Short: "Sensu command-line tool by golang",
 		Long:  "Sensu command-line tool by golang\nhttps://github.com/hico-horiuchi/ohgi",
 	}
 
-	eventsCmd := &cobra.Command{
-		Use:   "events",
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "events [client] [check]",
 		Short: "List and resolve current events",
-		Long:  "List and resolve current events",
+		Long:  "events                   List and resolve current events\nevents [client]          Returns the list of current events for a client\nevents [client] [check]  Returns an event",
 		Run: func(cmd *cobra.Command, args []string) {
-			if check != "" && client != "" {
-				fmt.Printf("%s", sensu.GetEventsClientCheck(client, check))
-			} else if client != "" {
-				fmt.Printf("%s", sensu.GetEventsClient(client))
-			} else {
+			switch len(args) {
+			case 0:
 				fmt.Printf("%s", sensu.GetEvents())
+			case 1:
+				fmt.Printf("%s", sensu.GetEventsClient(args[0]))
+			case 2:
+				fmt.Printf("%s", sensu.GetEventsClientCheck(args[0], args[1]))
 			}
 		},
-	}
-	eventsCmd.Flags().StringVarP(&client, "client", "l", "", "Returns the list of current events for a client")
-	eventsCmd.Flags().StringVarP(&check, "check", "c", "", "Returns an event")
-	rootCmd.AddCommand(eventsCmd)
+	})
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",

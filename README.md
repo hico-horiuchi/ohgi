@@ -34,7 +34,7 @@
       ohgi [command]
     
     Available Commands:
-      events                    List and resolve current events
+      events [client] [check]   List and resolve current events
       version                   Print git revision of ohgi
       help [command]            Help about any command
     
