@@ -10,6 +10,7 @@ var revision string
 
 func main() {
 	var client string
+	var check string
 
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
@@ -18,18 +19,21 @@ func main() {
 	}
 
 	eventsCmd := &cobra.Command{
-		Use:   "events [-c client]",
+		Use:   "events",
 		Short: "List and resolve current events",
 		Long:  "List and resolve current events",
 		Run: func(cmd *cobra.Command, args []string) {
-			if client != "" {
+			if check != "" && client != "" {
+				fmt.Printf("%s", sensu.GetEventsClientCheck(client, check))
+			} else if client != "" {
 				fmt.Printf("%s", sensu.GetEventsClient(client))
 			} else {
 				fmt.Printf("%s", sensu.GetEvents())
 			}
 		},
 	}
-	eventsCmd.Flags().StringVarP(&client, "client", "c", "", "Returns the list of current events for a client")
+	eventsCmd.Flags().StringVarP(&client, "client", "l", "", "Returns the list of current events for a client")
+	eventsCmd.Flags().StringVarP(&check, "check", "c", "", "Returns an event")
 	rootCmd.AddCommand(eventsCmd)
 
 	rootCmd.AddCommand(&cobra.Command{

@@ -19,13 +19,27 @@ func httpStatus(status int) string {
 	switch status {
 	case 401:
 		return strconv.Itoa(status) + " Unauthorized"
+	case 404:
+		return strconv.Itoa(status) + " Not Found"
 	case 500:
 		return strconv.Itoa(status) + " Internal Server Error"
 	}
 	return ""
 }
 
-func statusColor(status int) string {
+func statusFg(status int) string {
+	switch status {
+	case 0:
+		return "\x1b[32mOK\x1b[0m "
+	case 1:
+		return "\x1b[33mWARNING\x1b[0m "
+	case 2:
+		return "\x1b[31mCRITICAL\x1b[0m "
+	}
+	return "\x1b[37mUNKNOWN\x1b[0m "
+}
+
+func statusBg(status int) string {
 	switch status {
 	case 0:
 		return "\x1b[42m \x1b[0m "

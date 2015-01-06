@@ -33,9 +33,9 @@
     Usage:
       ohgi [command]
     
-    Available Commands: 
-      events [-c client]        List and resolve current events
+    Available Commands:
+      events                    List and resolve current events
       version                   Print git revision of ohgi
-      help [command]            Help about any command    Available Commands:
+      help [command]            Help about any command
     
     Use "ohgi help [command]" for more information about that command.
