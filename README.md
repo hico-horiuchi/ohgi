@@ -2,6 +2,11 @@
 
 ![image.png](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.png)
 
+#### Requirements
+
+  - [Sensu](http://sensuapp.org/) >= 0.13
+  - [spf13/cobra](https://github.com/spf13/cobra)
+
 #### Installation
 
     $ git clone git://github.com/hico-horiuchi/ohgi.git
