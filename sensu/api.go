@@ -8,12 +8,12 @@ import (
 	"strconv"
 )
 
-func requestAPI(method string, namespace string) []byte {
+func getAPI(namespace string) []byte {
 	var body []byte
 
 	conf := loadConfig()
 	url := "http://" + conf.Host + ":" + strconv.Itoa(conf.Port) + namespace
-	request, _ := http.NewRequest(method, url, nil)
+	request, _ := http.NewRequest("GET", url, nil)
 
 	if conf.User != "" && conf.Password != "" {
 		request.SetBasicAuth(conf.User, conf.Password)

@@ -23,7 +23,7 @@ func GetInfo() string {
 	var i infoStruct
 	var result []byte
 
-	contents := requestAPI("GET", "/info")
+	contents := getAPI("/info")
 	json.Unmarshal(contents, &i)
 
 	result = append(result, (bold("VERSION    ") + i.Sensu.Version + "\n")...)
