@@ -44,6 +44,18 @@ func main() {
 	})
 
 	rootCmd.AddCommand(&cobra.Command{
+		Use:   "checks",
+		Short: "Returns the list of checks",
+		Long:  "checks  Returns the list of checks",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 0:
+				fmt.Printf("%s", sensu.GetChecks())
+			}
+		},
+	})
+
+	rootCmd.AddCommand(&cobra.Command{
 		Use:   "info",
 		Short: "Returns the API info",
 		Long:  "Returns the API info",
