@@ -32,6 +32,15 @@ func main() {
 	})
 
 	rootCmd.AddCommand(&cobra.Command{
+		Use:   "info",
+		Short: "Returns the API info",
+		Long:  "Returns the API info",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("%s", sensu.GetInfo())
+		},
+	})
+
+	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",
 		Short: "Print git revision of ohgi",
 		Long:  "Print git revision of ohgi",

@@ -4,6 +4,7 @@
 
 #### Requirements
 
+  - [Golang](https://golang.org/) >= 1
   - [Sensu](http://sensuapp.org/) >= 0.13
   - [spf13/cobra](https://github.com/spf13/cobra)
 
@@ -35,6 +36,7 @@
     
     Available Commands:
       events [client] [check]   List and resolve current events
+      info                      Returns the API info
       version                   Print git revision of ohgi
       help [command]            Help about any command
     

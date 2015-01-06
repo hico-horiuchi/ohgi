@@ -18,7 +18,7 @@ func GetEvents() string {
 	var events []eventStruct
 	var result []byte
 
-	contents := requestAPI("GET", "events")
+	contents := requestAPI("GET", "/events")
 	json.Unmarshal(contents, &events)
 
 	if len(events) == 0 {
@@ -40,7 +40,7 @@ func GetEventsClient(client string) string {
 	var events []eventStruct
 	var result []byte
 
-	contents := requestAPI("GET", "events/"+client)
+	contents := requestAPI("GET", "/events/"+client)
 	json.Unmarshal(contents, &events)
 
 	if len(events) == 0 {
@@ -62,7 +62,7 @@ func GetEventsClientCheck(client string, check string) string {
 	var e eventStruct
 	var result []byte
 
-	contents := requestAPI("GET", "events/"+client+"/"+check)
+	contents := requestAPI("GET", "/events/"+client+"/"+check)
 	json.Unmarshal(contents, &e)
 
 	result = append(result, (bold("CLIENT         ") + fillSpace(e.Client.Name, 60) + "\n")...)
