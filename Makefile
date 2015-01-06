@@ -1,4 +1,5 @@
-REVISION = $$(git log --abbrev-commit --pretty=oneline | head -1 | cut -d' ' -f1)
+REVISION    := $(shell git log --abbrev-commit --pretty=oneline | head -1 | cut -d' ' -f1)
+GO_BUILTOPT := -ldflags '-s -w'
 
 run:
 	go run main.go ${ARGS}
@@ -7,9 +8,9 @@ fmt:
 	go fmt ./...
 
 build: fmt
-	sed -i '' -e "s/__OHGI_REVISION__/$(REVISION)/g" main.go
-	go build -o bin/ohgi main.go
-	sed -i '' -e "s/$(REVISION)/__OHGI_REVISION__/g" main.go
+	sed -i'.bak' -e "s/__OHGI_REVISION__/$(REVISION)/g" main.go
+	go build $(GO_BUILDOPT) -o bin/ohgi main.go
+	mv main.go{.bak,}
 
 clean:
 	rm -f bin/ohgi
