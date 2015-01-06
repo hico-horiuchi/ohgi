@@ -56,7 +56,7 @@ func fillSpace(str string, max int) string {
 	width := max - padding
 	length := len(str)
 	if length > width {
-		return str[0:width-1] + strings.Repeat(" ", padding)
+		return str[0:width] + strings.Repeat(" ", padding)
 	} else {
 		return str + strings.Repeat(" ", max-length)
 	}
