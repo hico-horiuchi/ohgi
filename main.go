@@ -32,13 +32,15 @@ func main() {
 	})
 
 	rootCmd.AddCommand(&cobra.Command{
-		Use:   "clients",
+		Use:   "clients [client]",
 		Short: "Returns the list of clients",
-		Long:  "clients  Returns the list of clients",
+		Long:  "clients           Returns the list of clients\nclients [client]  Returns a client",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
 				fmt.Printf("%s", sensu.GetClients())
+			case 1:
+				fmt.Printf("%s", sensu.GetClientsClient(args[0]))
 			}
 		},
 	})
@@ -60,7 +62,10 @@ func main() {
 		Short: "Returns the API info",
 		Long:  "Returns the API info",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("%s", sensu.GetInfo())
+			switch len(args) {
+			case 0:
+				fmt.Printf("%s", sensu.GetInfo())
+			}
 		},
 	})
 
