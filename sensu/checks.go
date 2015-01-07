@@ -39,3 +39,18 @@ func GetChecks() string {
 
 	return string(result)
 }
+
+func GetChecksCheck(check string) string {
+	var c checkStruct
+	var result []byte
+
+	contents := getAPI("/checks/" + check)
+	json.Unmarshal(contents, &c)
+
+	result = append(result, (bold("NAME         ") + fillSpace(c.Name, 60) + "\n")...)
+	result = append(result, (bold("COMMAND      ") + fillSpace(c.Command, 60) + "\n")...)
+	result = append(result, (bold("SUBSCRIBERS  ") + fillSpace(strings.Join(c.Subscribers, ", "), 60) + "\n")...)
+	result = append(result, (bold("INTERVAL     ") + strconv.Itoa(c.Interval) + "\n")...)
+
+	return string(result)
+}

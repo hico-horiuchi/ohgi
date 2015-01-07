@@ -37,7 +37,7 @@
     Available Commands:
       events [client] [check]   List and resolve current events
       clients [client]          Returns the list of clients
-      checks                    Returns the list of checks
+      checks [check]            Returns the list of checks
       info                      Returns the API info
       version                   Print git revision of ohgi
       help [command]            Help about any command
