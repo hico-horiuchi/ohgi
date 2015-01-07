@@ -2,6 +2,8 @@ package sensu
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -18,9 +20,13 @@ func GetEvents() string {
 	var events []eventStruct
 	var result []byte
 
-	contents := getAPI("/events")
-	json.Unmarshal(contents, &events)
+	contents, status := getAPI("/events")
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
 
+	json.Unmarshal(contents, &events)
 	if len(events) == 0 {
 		return "No current events\n"
 	}
@@ -40,9 +46,13 @@ func GetEventsClient(client string) string {
 	var events []eventStruct
 	var result []byte
 
-	contents := getAPI("/events/" + client)
-	json.Unmarshal(contents, &events)
+	contents, status := getAPI("/events/" + client)
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
 
+	json.Unmarshal(contents, &events)
 	if len(events) == 0 {
 		return "No current events for " + client + "\n"
 	}
@@ -62,7 +72,12 @@ func GetEventsClientCheck(client string, check string) string {
 	var e eventStruct
 	var result []byte
 
-	contents := getAPI("/events/" + client + "/" + check)
+	contents, status := getAPI("/events/" + client + "/" + check)
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
+
 	json.Unmarshal(contents, &e)
 
 	result = append(result, (bold("CLIENT         ") + fillSpace(e.Client.Name, 60) + "\n")...)

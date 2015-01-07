@@ -2,6 +2,8 @@ package sensu
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
 	"strings"
 )
 
@@ -16,9 +18,13 @@ func GetClients() string {
 	var clients []clientStruct
 	var result []byte
 
-	contents := getAPI("/clients")
-	json.Unmarshal(contents, &clients)
+	contents, status := getAPI("/clients")
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
 
+	json.Unmarshal(contents, &clients)
 	if len(clients) == 0 {
 		return "No clients\n"
 	}
@@ -37,7 +43,12 @@ func GetClientsClient(client string) string {
 	var c clientStruct
 	var result []byte
 
-	contents := getAPI("/clients/" + client)
+	contents, status := getAPI("/clients/" + client)
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
+
 	json.Unmarshal(contents, &c)
 
 	result = append(result, (bold("NAME           ") + fillSpace(c.Name, 60) + "\n")...)

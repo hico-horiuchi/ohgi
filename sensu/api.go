@@ -8,7 +8,8 @@ import (
 	"strconv"
 )
 
-func getAPI(namespace string) []byte {
+func getAPI(namespace string) ([]byte, int) {
+	var status int
 	var body []byte
 
 	conf := loadConfig()
@@ -25,17 +26,11 @@ func getAPI(namespace string) []byte {
 	if response == nil {
 		fmt.Println("Connection refused")
 		os.Exit(1)
-		return body
+		return body, status
 	} else {
 		status := response.StatusCode
 		body, _ := ioutil.ReadAll(response.Body)
 		defer response.Body.Close()
-
-		if status != 200 {
-			fmt.Println(httpStatus(status))
-			os.Exit(1)
-		}
-
-		return body
+		return body, status
 	}
 }

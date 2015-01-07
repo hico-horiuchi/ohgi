@@ -2,6 +2,8 @@ package sensu
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -23,9 +25,13 @@ func GetChecks() string {
 	var checks []checkStruct
 	var result []byte
 
-	contents := getAPI("/checks")
-	json.Unmarshal(contents, &checks)
+	contents, status := getAPI("/checks")
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
 
+	json.Unmarshal(contents, &checks)
 	if len(checks) == 0 {
 		return "No checks\n"
 	}
@@ -44,7 +50,12 @@ func GetChecksCheck(check string) string {
 	var c checkStruct
 	var result []byte
 
-	contents := getAPI("/checks/" + check)
+	contents, status := getAPI("/checks/" + check)
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
+
 	json.Unmarshal(contents, &c)
 
 	result = append(result, (bold("NAME         ") + fillSpace(c.Name, 60) + "\n")...)

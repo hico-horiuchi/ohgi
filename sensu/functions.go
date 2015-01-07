@@ -17,12 +17,18 @@ func bold(str string) string {
 
 func httpStatus(status int) string {
 	switch status {
+	case 200:
+		return strconv.Itoa(status) + " OK"
+	case 204:
+		return strconv.Itoa(status) + " No Content"
 	case 401:
 		return strconv.Itoa(status) + " Unauthorized"
 	case 404:
 		return strconv.Itoa(status) + " Not Found"
 	case 500:
 		return strconv.Itoa(status) + " Internal Server Error"
+	case 503:
+		return strconv.Itoa(status) + " Service Unavailable"
 	}
 	return ""
 }

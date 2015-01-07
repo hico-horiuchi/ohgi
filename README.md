@@ -38,6 +38,7 @@
       events [client] [check]   List and resolve current events
       clients [client]          Returns the list of clients
       checks [check]            Returns the list of checks
+      health                    Returns the API info
       info                      Returns the API info
       version                   Print git revision of ohgi
       help [command]            Help about any command

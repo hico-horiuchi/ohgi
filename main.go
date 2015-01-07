@@ -9,6 +9,9 @@ import (
 var revision string
 
 func main() {
+	var consumers int
+	var messages int
+
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
 		Short: "Sensu command-line tool by golang",
@@ -59,15 +62,24 @@ func main() {
 		},
 	})
 
+	healthCmd := &cobra.Command{
+		Use:   "health",
+		Short: "Returns the API info",
+		Long:  "Returns the API info",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("%s", sensu.GetHealth(consumers, messages))
+		},
+	}
+	healthCmd.Flags().IntVarP(&consumers, "consumers", "c", 1, "The minimum number of transport consumers to be considered healthy")
+	healthCmd.Flags().IntVarP(&messages, "messages", "m", 1, "The maximum number of transport queued messages to be considered healthy")
+	rootCmd.AddCommand(healthCmd)
+
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "info",
 		Short: "Returns the API info",
 		Long:  "Returns the API info",
 		Run: func(cmd *cobra.Command, args []string) {
-			switch len(args) {
-			case 0:
-				fmt.Printf("%s", sensu.GetInfo())
-			}
+			fmt.Printf("%s", sensu.GetInfo())
 		},
 	})
 
