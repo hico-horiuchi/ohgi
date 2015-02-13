@@ -17,8 +17,8 @@
 
 #### Configuration
 
-    /* ~/.sensu.json */
-    
+`~/.sensu.json`
+
     {
       "host": "127.0.0.1",  // Required
       "port": 4567,         // Required
