@@ -2,35 +2,41 @@ package sensu
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 )
 
-func getAPI(namespace string) ([]byte, int) {
-	var status int
-	var body []byte
-
+func makeRequest(method string, namespace string, payload io.Reader) *http.Request {
 	conf := loadConfig()
 	url := "http://" + conf.Host + ":" + strconv.Itoa(conf.Port) + namespace
-	request, _ := http.NewRequest("GET", url, nil)
+	request, _ := http.NewRequest(method, url, payload)
 
 	if conf.User != "" && conf.Password != "" {
 		request.SetBasicAuth(conf.User, conf.Password)
 	}
 
+	return request
+}
+
+func doAPI(method string, namespace string, payload io.Reader) ([]byte, int) {
 	client := &http.Client{}
+	request := makeRequest(method, namespace, payload)
 	response, _ := client.Do(request)
 
 	if response == nil {
 		fmt.Println("Connection refused")
 		os.Exit(1)
-		return body, status
-	} else {
-		status := response.StatusCode
-		body, _ := ioutil.ReadAll(response.Body)
-		defer response.Body.Close()
-		return body, status
 	}
+
+	status := response.StatusCode
+	body, _ := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
+	return body, status
+}
+
+func getAPI(namespace string) ([]byte, int) {
+	return doAPI("GET", namespace, nil)
 }
