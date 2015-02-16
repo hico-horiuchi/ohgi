@@ -33,6 +33,20 @@ func main() {
 	})
 
 	rootCmd.AddCommand(&cobra.Command{
+		Use:   "request [check] [subscriber]",
+		Short: "Issues a check execution request",
+		Long:  "request [check]               Issues a check execution request\nrequest [check] [subscriber]  Issues a check execution request",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 1:
+				fmt.Printf("%s", sensu.PostRequest(args[0], ""))
+			case 2:
+				fmt.Printf("%s", sensu.PostRequest(args[0], args[1]))
+			}
+		},
+	})
+
+	rootCmd.AddCommand(&cobra.Command{
 		Use:   "clients [client]",
 		Short: "Returns the list of clients",
 		Long:  "clients           Returns the list of clients\nclients [client]  Returns a client",

@@ -35,13 +35,14 @@
       ohgi [command]
     
     Available Commands:
-      checks [check]            Returns the list of checks
-      clients [client]          Returns the list of clients
-      events [client] [check]   List and resolve current events
-      resolve [client] [check]  Resolves an event (delayed action)
-      health                    Returns the API info
-      info                      Returns the API info
-      version                   Print git revision of ohgi
-      help [command]            Help about any command
+      checks [check]               Returns the list of checks
+      request [check] [subscriber] Issues a check execution request
+      clients [client]             Returns the list of clients
+      events [client] [check]      List and resolve current events
+      resolve [client] [check]     Resolves an event (delayed action)
+      health                       Returns the API info
+      info                         Returns the API info
+      version                      Print git revision of ohgi
+      help [command]               Help about any command
     
     Use "ohgi help [command]" for more information about that command.
