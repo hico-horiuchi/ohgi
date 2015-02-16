@@ -14,11 +14,11 @@ type clientStruct struct {
 	Timestamp     int64
 }
 
-func GetClients() string {
+func GetClients(limit int, offset int) string {
 	var clients []clientStruct
 	var result []byte
 
-	contents, status := getAPI("/clients")
+	contents, status := getAPI(fmt.Sprintf("/clients?limit=%d&offset=%d", limit, offset))
 	if status != 200 {
 		fmt.Println(httpStatus(status))
 		os.Exit(1)

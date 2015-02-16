@@ -9,8 +9,12 @@ import (
 var revision string
 
 func main() {
-	var consumers int
-	var messages int
+	var (
+		limit     int
+		offset    int
+		consumers int
+		messages  int
+	)
 
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
@@ -46,19 +50,22 @@ func main() {
 		},
 	})
 
-	rootCmd.AddCommand(&cobra.Command{
+	clientsCmd := &cobra.Command{
 		Use:   "clients [client]",
 		Short: "Returns the list of clients",
 		Long:  "clients           Returns the list of clients\nclients [client]  Returns a client",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Printf("%s", sensu.GetClients())
+				fmt.Printf("%s", sensu.GetClients(limit, offset))
 			case 1:
 				fmt.Printf("%s", sensu.GetClientsClient(args[0]))
 			}
 		},
-	})
+	}
+	clientsCmd.Flags().IntVarP(&limit, "limit", "l", -1, "The number of clients to return")
+	clientsCmd.Flags().IntVarP(&offset, "offset", "o", -1, "The number of clients to offset before returning items")
+	rootCmd.AddCommand(clientsCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "events [client] [check]",
