@@ -18,6 +18,10 @@ func makeRequest(method string, namespace string, payload io.Reader) *http.Reque
 		request.SetBasicAuth(conf.User, conf.Password)
 	}
 
+	if payload != nil {
+		request.Header.Set("Content-Type", "application/json")
+	}
+
 	return request
 }
 
@@ -39,4 +43,8 @@ func doAPI(method string, namespace string, payload io.Reader) ([]byte, int) {
 
 func getAPI(namespace string) ([]byte, int) {
 	return doAPI("GET", namespace, nil)
+}
+
+func postAPI(namespace string, payload io.Reader) ([]byte, int) {
+	return doAPI("POST", namespace, payload)
 }

@@ -62,6 +62,18 @@ func main() {
 		},
 	})
 
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "resolve [client] [check]",
+		Short: "Resolves an event (delayed action)",
+		Long:  "resolve [client] [check]  Resolves an event (delayed action)",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 2:
+				fmt.Printf("%s", sensu.PostResolve(args[0], args[1]))
+			}
+		},
+	})
+
 	healthCmd := &cobra.Command{
 		Use:   "health",
 		Short: "Returns the API info",

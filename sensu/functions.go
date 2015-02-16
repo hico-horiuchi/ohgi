@@ -18,19 +18,23 @@ func bold(str string) string {
 func httpStatus(status int) string {
 	switch status {
 	case 200:
-		return strconv.Itoa(status) + " OK"
+		return strconv.Itoa(status) + " OK\n"
+	case 202:
+		return strconv.Itoa(status) + " Accepted\n"
 	case 204:
-		return strconv.Itoa(status) + " No Content"
+		return strconv.Itoa(status) + " No Content\n"
+	case 400:
+		return strconv.Itoa(status) + " Bad Request\n"
 	case 401:
-		return strconv.Itoa(status) + " Unauthorized"
+		return strconv.Itoa(status) + " Unauthorized\n"
 	case 404:
-		return strconv.Itoa(status) + " Not Found"
+		return strconv.Itoa(status) + " Not Found\n"
 	case 500:
-		return strconv.Itoa(status) + " Internal Server Error"
+		return strconv.Itoa(status) + " Internal Server Error\n"
 	case 503:
-		return strconv.Itoa(status) + " Service Unavailable"
+		return strconv.Itoa(status) + " Service Unavailable\n"
 	}
-	return ""
+	return "\n"
 }
 
 func statusFg(status int) string {
