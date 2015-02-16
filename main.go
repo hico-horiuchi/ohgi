@@ -19,17 +19,15 @@ func main() {
 	}
 
 	rootCmd.AddCommand(&cobra.Command{
-		Use:   "events [client] [check]",
-		Short: "List and resolve current events",
-		Long:  "events                   List and resolve current events\nevents [client]          Returns the list of current events for a client\nevents [client] [check]  Returns an event",
+		Use:   "checks [check]",
+		Short: "Returns the list of checks",
+		Long:  "checks          Returns the list of checks\nchecks [check]  Returns a check",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Printf("%s", sensu.GetEvents())
+				fmt.Printf("%s", sensu.GetChecks())
 			case 1:
-				fmt.Printf("%s", sensu.GetEventsClient(args[0]))
-			case 2:
-				fmt.Printf("%s", sensu.GetEventsClientCheck(args[0], args[1]))
+				fmt.Printf("%s", sensu.GetChecksCheck(args[0]))
 			}
 		},
 	})
@@ -49,15 +47,17 @@ func main() {
 	})
 
 	rootCmd.AddCommand(&cobra.Command{
-		Use:   "checks [check]",
-		Short: "Returns the list of checks",
-		Long:  "checks          Returns the list of checks\nchecks [check]  Returns a check",
+		Use:   "events [client] [check]",
+		Short: "List and resolve current events",
+		Long:  "events                   List and resolve current events\nevents [client]          Returns the list of current events for a client\nevents [client] [check]  Returns an event",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Printf("%s", sensu.GetChecks())
+				fmt.Printf("%s", sensu.GetEvents())
 			case 1:
-				fmt.Printf("%s", sensu.GetChecksCheck(args[0]))
+				fmt.Printf("%s", sensu.GetEventsClient(args[0]))
+			case 2:
+				fmt.Printf("%s", sensu.GetEventsClientCheck(args[0], args[1]))
 			}
 		},
 	})
