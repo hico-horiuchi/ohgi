@@ -58,3 +58,13 @@ func GetClientsClient(client string) string {
 
 	return string(result)
 }
+
+func DeleteClientsClient(client string) string {
+	_, status := deleteAPI("/clients/" + client)
+	if status != 202 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
+
+	return httpStatus(status)
+}

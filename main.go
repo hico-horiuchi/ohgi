@@ -60,12 +60,17 @@ func main() {
 			case 0:
 				fmt.Printf("%s", sensu.GetClients(limit, offset))
 			case 1:
-				fmt.Printf("%s", sensu.GetClientsClient(args[0]))
+				if delete {
+					fmt.Printf("%s", sensu.DeleteClientsClient(args[0]))
+				} else {
+					fmt.Printf("%s", sensu.GetClientsClient(args[0]))
+				}
 			}
 		},
 	}
 	clientsCmd.Flags().IntVarP(&limit, "limit", "l", -1, "The number of clients to return")
 	clientsCmd.Flags().IntVarP(&offset, "offset", "o", -1, "The number of clients to offset before returning items")
+	clientsCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Removes a client, resolving its current events (delayed action)")
 	rootCmd.AddCommand(clientsCmd)
 
 	eventsCmd := &cobra.Command{
