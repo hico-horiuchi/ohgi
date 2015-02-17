@@ -48,3 +48,7 @@ func getAPI(namespace string) ([]byte, int) {
 func postAPI(namespace string, payload io.Reader) ([]byte, int) {
 	return doAPI("POST", namespace, payload)
 }
+
+func deleteAPI(namespace string) ([]byte, int) {
+	return doAPI("DELETE", namespace, nil)
+}

@@ -95,3 +95,13 @@ func GetEventsClientCheck(client string, check string) string {
 
 	return string(result)
 }
+
+func DeleteEventsClientCheck(client string, check string) string {
+	_, status := deleteAPI("/events/" + client + "/" + check)
+	if status != 202 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
+
+	return httpStatus(status)
+}

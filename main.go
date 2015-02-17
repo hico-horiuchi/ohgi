@@ -12,6 +12,7 @@ func main() {
 	var (
 		limit     int
 		offset    int
+		delete    bool
 		consumers int
 		messages  int
 	)
@@ -67,7 +68,7 @@ func main() {
 	clientsCmd.Flags().IntVarP(&offset, "offset", "o", -1, "The number of clients to offset before returning items")
 	rootCmd.AddCommand(clientsCmd)
 
-	rootCmd.AddCommand(&cobra.Command{
+	eventsCmd := &cobra.Command{
 		Use:   "events [client] [check]",
 		Short: "List and resolve current events",
 		Long:  "events                   List and resolve current events\nevents [client]          Returns the list of current events for a client\nevents [client] [check]  Returns an event",
@@ -78,10 +79,16 @@ func main() {
 			case 1:
 				fmt.Printf("%s", sensu.GetEventsClient(args[0]))
 			case 2:
-				fmt.Printf("%s", sensu.GetEventsClientCheck(args[0], args[1]))
+				if delete {
+					fmt.Printf("%s", sensu.DeleteEventsClientCheck(args[0], args[1]))
+				} else {
+					fmt.Printf("%s", sensu.GetEventsClientCheck(args[0], args[1]))
+				}
 			}
 		},
-	})
+	}
+	eventsCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Resolves an event (delayed action)")
+	rootCmd.AddCommand(eventsCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "resolve [client] [check]",
