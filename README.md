@@ -38,6 +38,7 @@
       checks [check]               Returns the list of checks
       request [check] [subscriber] Issues a check execution request
       clients [client]             Returns the list of clients
+      history [client]             Returns the client history
       events [client] [check]      List and resolve current events
       resolve [client] [check]     Resolves an event (delayed action)
       health                       Returns the API info

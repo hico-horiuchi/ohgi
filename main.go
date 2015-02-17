@@ -73,6 +73,18 @@ func main() {
 	clientsCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Removes a client, resolving its current events (delayed action)")
 	rootCmd.AddCommand(clientsCmd)
 
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "history [client]",
+		Short: "Returns the client history",
+		Long:  "history [client]  Returns the client history",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 1:
+				fmt.Printf("%s", sensu.GetHistory(args[0]))
+			}
+		},
+	})
+
 	eventsCmd := &cobra.Command{
 		Use:   "events [client] [check]",
 		Short: "List and resolve current events",

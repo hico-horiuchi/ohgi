@@ -11,6 +11,17 @@ func utoa(timestamp int64) string {
 	return time.Unix(timestamp, 0).Format(format)
 }
 
+func stoa(arr []int, sep string) string {
+	var result []byte
+
+	for i := range arr {
+		line := strconv.Itoa(arr[i]) + sep
+		result = append(result, line...)
+	}
+
+	return string(result)
+}
+
 func bold(str string) string {
 	return "\x1b[1m" + str + "\x1b[0m"
 }
