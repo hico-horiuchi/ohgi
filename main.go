@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var revision string
+var version string
 
 func main() {
 	var (
@@ -172,10 +172,10 @@ func main() {
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",
-		Short: "Print git revision of ohgi",
-		Long:  "Print git revision of ohgi",
+		Short: "Print ohgi version",
+		Long:  "Print ohgi version",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("ohgi revision %s\n", revision)
+			fmt.Printf("ohgi version %s\n", version)
 		},
 	})
 

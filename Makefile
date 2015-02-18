@@ -1,5 +1,5 @@
-REVISION    := $(shell git log --abbrev-commit --pretty=oneline | head -1 | cut -d' ' -f1)
-GO_BUILDOPT := -ldflags '-s -w -X main.revision $(REVISION)'
+VERSION     := 0.1.0
+GO_BUILDOPT := -ldflags '-s -w -X main.version $(VERSION)'
 
 run:
 	go run main.go ${ARGS}
