@@ -10,11 +10,13 @@ var revision string
 
 func main() {
 	var (
-		limit     int
-		offset    int
-		delete    bool
-		consumers int
-		messages  int
+		limit      int
+		offset     int
+		delete     bool
+		consumers  int
+		messages   int
+		expiration string
+		reason     string
 	)
 
 	rootCmd := &cobra.Command{
@@ -139,6 +141,34 @@ func main() {
 			fmt.Printf("%s", sensu.GetInfo())
 		},
 	})
+
+	silenceCmd := &cobra.Command{
+		Use:   "silence [client] [check]",
+		Short: "Returns a list of silences",
+		Long:  "silence                   Returns a list of silences\nsilence [client]          Create a silence\nsilence [client] [check]  Create a silence",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 0:
+				fmt.Printf("%s", sensu.GetSilence())
+			case 1:
+				if delete {
+					fmt.Printf("%s", sensu.DeleteSilence(args[0], ""))
+				} else {
+					fmt.Printf("%s", sensu.PostSilence(args[0], "", expiration, reason))
+				}
+			case 2:
+				if delete {
+					fmt.Printf("%s", sensu.DeleteSilence(args[0], args[1]))
+				} else {
+					fmt.Printf("%s", sensu.PostSilence(args[0], args[1], expiration, reason))
+				}
+			}
+		},
+	}
+	silenceCmd.Flags().StringVarP(&expiration, "expiration", "e", "", "15m, 1h, 1d")
+	silenceCmd.Flags().StringVarP(&reason, "reason", "r", "", "Enter a reason")
+	silenceCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Delete a silence")
+	rootCmd.AddCommand(silenceCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",

@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -22,6 +23,29 @@ func stoa(arr []int, sep string) string {
 	return string(result)
 }
 
+func stoe(expiration string) int64 {
+	str := []byte(expiration)
+	format := regexp.MustCompile("([0-9]+)([smhd])")
+	group := format.FindSubmatch(str)
+	var expire int64 = -1
+
+	if len(group) == 3 {
+		num, _ := strconv.ParseInt(string(group[1]), 10, 0)
+		switch string(group[2]) {
+		case "s":
+			expire = num
+		case "m":
+			expire = num * int64(time.Minute) / int64(time.Second)
+		case "h":
+			expire = num * int64(time.Hour) / int64(time.Second)
+		case "d":
+			expire = num * int64(time.Hour) * 24 / int64(time.Second)
+		}
+	}
+
+	return expire
+}
+
 func bold(str string) string {
 	return "\x1b[1m" + str + "\x1b[0m"
 }
@@ -30,6 +54,8 @@ func httpStatus(status int) string {
 	switch status {
 	case 200:
 		return strconv.Itoa(status) + " OK\n"
+	case 201:
+		return strconv.Itoa(status) + " Created\n"
 	case 202:
 		return strconv.Itoa(status) + " Accepted\n"
 	case 204:

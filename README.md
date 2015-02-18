@@ -43,6 +43,7 @@
       resolve [client] [check]     Resolves an event (delayed action)
       health                       Returns the API info
       info                         Returns the API info
+      silence [client] [check]     Returns a list of silences
       version                      Print git revision of ohgi
       help [command]               Help about any command
     
