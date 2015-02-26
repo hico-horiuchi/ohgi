@@ -26,9 +26,8 @@ func makeRequest(method string, namespace string, payload io.Reader) *http.Reque
 }
 
 func doAPI(method string, namespace string, payload io.Reader) ([]byte, int) {
-	client := &http.Client{}
 	request := makeRequest(method, namespace, payload)
-	response, _ := client.Do(request)
+	response, _ := http.DefaultClient.Do(request)
 
 	if response == nil {
 		fmt.Println("Connection refused")
