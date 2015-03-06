@@ -36,10 +36,10 @@ func GetChecks() string {
 		return "No checks\n"
 	}
 
-	result = append(result, bold("NAME                COMMAND                                 INTERVAL\n")...)
+	result = append(result, bold("NAME                          COMMAND                                                     INTERVAL\n")...)
 	for i := range checks {
 		c := checks[i]
-		line := fillSpace(c.Name, 20) + fillSpace(strings.Replace(c.Command, "\n", " ", -1), 40) + strconv.Itoa(c.Interval) + "\n"
+		line := fillSpace(c.Name, 30) + fillSpace(c.Command, 60) + strconv.Itoa(c.Interval) + "\n"
 		result = append(result, line...)
 	}
 
@@ -58,9 +58,9 @@ func GetChecksCheck(check string) string {
 
 	json.Unmarshal(contents, &c)
 
-	result = append(result, (bold("NAME         ") + fillSpace(c.Name, 60) + "\n")...)
-	result = append(result, (bold("COMMAND      ") + fillSpace(c.Command, 60) + "\n")...)
-	result = append(result, (bold("SUBSCRIBERS  ") + fillSpace(strings.Join(c.Subscribers, ", "), 60) + "\n")...)
+	result = append(result, (bold("NAME         ") + c.Name + "\n")...)
+	result = append(result, (bold("COMMAND      ") + c.Command + "\n")...)
+	result = append(result, (bold("SUBSCRIBERS  ") + strings.Join(c.Subscribers, ", ") + "\n")...)
 	result = append(result, (bold("INTERVAL     ") + strconv.Itoa(c.Interval) + "\n")...)
 
 	return string(result)

@@ -35,7 +35,7 @@ func GetSilence() string {
 		return "No silences\n"
 	}
 
-	result = append(result, bold("CLIENT              CHECK               SOURCE    REASON              TIMESTAMP            EXPIRATION\n")...)
+	result = append(result, bold("CLIENT                                  CHECK                         REASON                        EXPIRATION\n")...)
 	for i := range silences {
 		s := silences[i]
 		path := strings.Split(s.Path, "/")
@@ -52,8 +52,7 @@ func GetSilence() string {
 			expire = utoa(time.Now().Unix() + s.Expire)
 		}
 
-		timestamp := utoa(int64(s.Content.Timestamp))
-		line := fillSpace(path[1], 20) + fillSpace(path[2], 20) + fillSpace(s.Content.Source, 10) + fillSpace(s.Content.Reason, 20) + timestamp + "  " + expire + "\n"
+		line := fillSpace(path[1], 40) + fillSpace(path[2], 30) + fillSpace(s.Content.Reason, 30) + expire + "\n"
 		result = append(result, line...)
 	}
 
