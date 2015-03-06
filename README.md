@@ -48,3 +48,7 @@
       help [command]               Help about any command
     
     Use "ohgi help [command]" for more information about that command.
+
+#### License
+
+Ohgi is released under the [MIT license](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/LICENSE).
