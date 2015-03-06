@@ -29,10 +29,10 @@ func GetClients(limit int, offset int) string {
 		return "No clients\n"
 	}
 
-	result = append(result, bold("NAME                ADDRESS             TIMESTAMP\n")...)
+	result = append(result, bold("NAME                                    ADDRESS                                 TIMESTAMP\n")...)
 	for i := range clients {
 		c := clients[i]
-		line := fillSpace(c.Name, 20) + fillSpace(c.Address, 20) + utoa(c.Timestamp) + "\n"
+		line := fillSpace(c.Name, 40) + fillSpace(c.Address, 40) + utoa(c.Timestamp) + "\n"
 		result = append(result, line...)
 	}
 
@@ -51,9 +51,9 @@ func GetClientsClient(client string) string {
 
 	json.Unmarshal(contents, &c)
 
-	result = append(result, (bold("NAME           ") + fillSpace(c.Name, 60) + "\n")...)
-	result = append(result, (bold("ADDRESS        ") + fillSpace(c.Address, 60) + "\n")...)
-	result = append(result, (bold("SUBSCRIPTIONS  ") + fillSpace(strings.Join(c.Subscriptions, ", "), 60) + "\n")...)
+	result = append(result, (bold("NAME           ") + c.Name + "\n")...)
+	result = append(result, (bold("ADDRESS        ") + c.Address + "\n")...)
+	result = append(result, (bold("SUBSCRIPTIONS  ") + strings.Join(c.Subscriptions, ", ") + "\n")...)
 	result = append(result, (bold("TIMESTAMP      ") + utoa(c.Timestamp) + "\n")...)
 
 	return string(result)
