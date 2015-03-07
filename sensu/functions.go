@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var EscapeSequence bool = true
+
 func utoa(timestamp int64) string {
 	format := "2006/01/02 15:04:05"
 	return time.Unix(timestamp, 0).Format(format)
@@ -47,6 +49,10 @@ func stoe(expiration string) int64 {
 }
 
 func bold(str string) string {
+	if !EscapeSequence {
+		return str
+	}
+
 	return "\x1b[1m" + str + "\x1b[0m"
 }
 
@@ -75,6 +81,19 @@ func httpStatus(status int) string {
 }
 
 func statusFg(status int) string {
+	if !EscapeSequence {
+		switch status {
+		case 0:
+			return "OK "
+		case 1:
+			return "WARNING "
+		case 2:
+			return "CRITICAL "
+		default:
+			return "UNKNOWN "
+		}
+	}
+
 	switch status {
 	case 0:
 		return "\x1b[32mOK\x1b[0m "
@@ -82,11 +101,16 @@ func statusFg(status int) string {
 		return "\x1b[33mWARNING\x1b[0m "
 	case 2:
 		return "\x1b[31mCRITICAL\x1b[0m "
+	default:
+		return "\x1b[37mUNKNOWN\x1b[0m "
 	}
-	return "\x1b[37mUNKNOWN\x1b[0m "
 }
 
 func statusBg(status int) string {
+	if !EscapeSequence {
+		return "  "
+	}
+
 	switch status {
 	case 0:
 		return "\x1b[42m \x1b[0m "

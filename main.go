@@ -3,7 +3,9 @@ package main
 import (
 	"./sensu"
 	"fmt"
+	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 var version string
@@ -18,6 +20,10 @@ func main() {
 		expiration string
 		reason     string
 	)
+
+	if !isatty.IsTerminal(os.Stdout.Fd()) {
+		sensu.EscapeSequence = false
+	}
 
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
