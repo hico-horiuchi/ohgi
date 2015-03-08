@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -31,6 +32,41 @@ func GetClients(limit int, offset int) string {
 
 	result = append(result, bold("NAME                                    ADDRESS                                 TIMESTAMP\n")...)
 	for i := range clients {
+		c := clients[i]
+		line := fillSpace(c.Name, 40) + fillSpace(c.Address, 40) + utoa(c.Timestamp) + "\n"
+		result = append(result, line...)
+	}
+
+	return string(result)
+}
+
+func GetClientsWildcard(pattern string) string {
+	var clients []clientStruct
+	var result []byte
+	var matches []int
+	re := regexp.MustCompile(strings.Replace(pattern, "*", ".*", -1))
+
+	contents, status := getAPI("/clients")
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
+
+	json.Unmarshal(contents, &clients)
+	for i := range clients {
+		c := clients[i]
+		match := re.FindStringSubmatch(c.Name)
+		if len(match) > 0 {
+			matches = append(matches, i)
+		}
+	}
+
+	if len(matches) == 0 {
+		return "No clients\n"
+	}
+
+	result = append(result, bold("NAME                                    ADDRESS                                 TIMESTAMP\n")...)
+	for _, i := range matches {
 		c := clients[i]
 		line := fillSpace(c.Name, 40) + fillSpace(c.Address, 40) + utoa(c.Timestamp) + "\n"
 		result = append(result, line...)

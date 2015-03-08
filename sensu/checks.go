@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -38,6 +39,41 @@ func GetChecks() string {
 
 	result = append(result, bold("NAME                          COMMAND                                                     INTERVAL\n")...)
 	for i := range checks {
+		c := checks[i]
+		line := fillSpace(c.Name, 30) + fillSpace(c.Command, 60) + strconv.Itoa(c.Interval) + "\n"
+		result = append(result, line...)
+	}
+
+	return string(result)
+}
+
+func GetChecksWildcard(pattern string) string {
+	var checks []checkStruct
+	var result []byte
+	var matches []int
+	re := regexp.MustCompile(strings.Replace(pattern, "*", ".*", -1))
+
+	contents, status := getAPI("/checks")
+	if status != 200 {
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
+	}
+
+	json.Unmarshal(contents, &checks)
+	for i := range checks {
+		c := checks[i]
+		match := re.FindStringSubmatch(c.Name)
+		if len(match) > 0 {
+			matches = append(matches, i)
+		}
+	}
+
+	if len(matches) == 0 {
+		return "No checks\n"
+	}
+
+	result = append(result, bold("NAME                          COMMAND                                                     INTERVAL\n")...)
+	for _, i := range matches {
 		c := checks[i]
 		line := fillSpace(c.Name, 30) + fillSpace(c.Command, 60) + strconv.Itoa(c.Interval) + "\n"
 		result = append(result, line...)

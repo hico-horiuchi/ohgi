@@ -6,6 +6,7 @@ import (
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 	"os"
+	"strings"
 )
 
 var version string
@@ -40,7 +41,11 @@ func main() {
 			case 0:
 				fmt.Printf("%s", sensu.GetChecks())
 			case 1:
-				fmt.Printf("%s", sensu.GetChecksCheck(args[0]))
+				if strings.Contains(args[0], "*") {
+					fmt.Printf("%s", sensu.GetChecksWildcard(args[0]))
+				} else {
+					fmt.Printf("%s", sensu.GetChecksCheck(args[0]))
+				}
 			}
 		},
 	})
@@ -71,7 +76,11 @@ func main() {
 				if delete {
 					fmt.Printf("%s", sensu.DeleteClientsClient(args[0]))
 				} else {
-					fmt.Printf("%s", sensu.GetClientsClient(args[0]))
+					if strings.Contains(args[0], "*") {
+						fmt.Printf("%s", sensu.GetClientsWildcard(args[0]))
+					} else {
+						fmt.Printf("%s", sensu.GetClientsClient(args[0]))
+					}
 				}
 			}
 		},
