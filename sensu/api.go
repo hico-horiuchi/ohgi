@@ -1,21 +1,24 @@
 package sensu
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"os"
 	"strconv"
 )
 
 func makeRequest(method string, namespace string, payload io.Reader) *http.Request {
-	conf := loadConfig()
-	url := "http://" + conf.Host + ":" + strconv.Itoa(conf.Port) + namespace
-	request, _ := http.NewRequest(method, url, payload)
+	config := loadConfig()
+	url := "http://" + config.Host + ":" + strconv.Itoa(config.Port) + namespace
+	request, err := http.NewRequest(method, url, payload)
 
-	if conf.User != "" && conf.Password != "" {
-		request.SetBasicAuth(conf.User, conf.Password)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if config.User != "" && config.Password != "" {
+		request.SetBasicAuth(config.User, config.Password)
 	}
 
 	if payload != nil {
@@ -27,15 +30,19 @@ func makeRequest(method string, namespace string, payload io.Reader) *http.Reque
 
 func doAPI(method string, namespace string, payload io.Reader) ([]byte, int) {
 	request := makeRequest(method, namespace, payload)
-	response, _ := http.DefaultClient.Do(request)
+	response, err := http.DefaultClient.Do(request)
 
-	if response == nil {
-		fmt.Println("Connection refused")
-		os.Exit(1)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	status := response.StatusCode
-	body, _ := ioutil.ReadAll(response.Body)
+	body, err := ioutil.ReadAll(response.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	defer response.Body.Close()
 	return body, status
 }

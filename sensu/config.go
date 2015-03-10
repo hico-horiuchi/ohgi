@@ -2,27 +2,26 @@ package sensu
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
-type config struct {
+type configStruct struct {
 	Host     string
 	Port     int
 	User     string
 	Password string
 }
 
-func loadConfig() config {
-	var conf config
-	contents, _ := ioutil.ReadFile(os.Getenv("HOME") + "/.sensu.json")
+func loadConfig() configStruct {
+	var config configStruct
+	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.sensu.json")
 
-	if contents == nil {
-		fmt.Println("Cannot open ~/.sensu.json")
-		os.Exit(1)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	json.Unmarshal(contents, &conf)
-	return conf
+	json.Unmarshal(bytes, &config)
+	return config
 }

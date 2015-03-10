@@ -2,23 +2,20 @@ package sensu
 
 import (
 	"encoding/json"
-	"fmt"
-	"os"
+	"log"
 	"strconv"
 )
 
-type sensuStruct struct {
-	Version string
-}
-
-type connectionStruct struct {
-	Connected bool
-}
-
 type infoStruct struct {
-	Sensu     sensuStruct
-	Transport connectionStruct
-	Redis     connectionStruct
+	Sensu struct {
+		Version string
+	}
+	Transport struct {
+		Connected bool
+	}
+	Redis struct {
+		Connected bool
+	}
 }
 
 func GetInfo() string {
@@ -27,8 +24,7 @@ func GetInfo() string {
 
 	contents, status := getAPI("/info")
 	if status != 200 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &i)

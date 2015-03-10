@@ -3,7 +3,7 @@ package sensu
 import (
 	"encoding/json"
 	"fmt"
-	"os"
+	"log"
 	"regexp"
 	"strings"
 )
@@ -21,8 +21,7 @@ func GetClients(limit int, offset int) string {
 
 	contents, status := getAPI(fmt.Sprintf("/clients?limit=%d&offset=%d", limit, offset))
 	if status != 200 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &clients)
@@ -48,8 +47,7 @@ func GetClientsWildcard(pattern string) string {
 
 	contents, status := getAPI("/clients")
 	if status != 200 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &clients)
@@ -81,8 +79,7 @@ func GetClientsClient(client string) string {
 
 	contents, status := getAPI("/clients/" + client)
 	if status != 200 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &c)
@@ -98,9 +95,8 @@ func GetClientsClient(client string) string {
 func DeleteClientsClient(client string) string {
 	_, status := deleteAPI("/clients/" + client)
 	if status != 202 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
-	return httpStatus(status)
+	return httpStatus(status) + "\n"
 }

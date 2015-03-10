@@ -2,8 +2,7 @@ package sensu
 
 import (
 	"encoding/json"
-	"fmt"
-	"os"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -28,8 +27,7 @@ func GetChecks() string {
 
 	contents, status := getAPI("/checks")
 	if status != 200 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &checks)
@@ -55,8 +53,7 @@ func GetChecksWildcard(pattern string) string {
 
 	contents, status := getAPI("/checks")
 	if status != 200 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &checks)
@@ -88,8 +85,7 @@ func GetChecksCheck(check string) string {
 
 	contents, status := getAPI("/checks/" + check)
 	if status != 200 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &c)

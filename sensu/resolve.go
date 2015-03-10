@@ -1,8 +1,7 @@
 package sensu
 
 import (
-	"fmt"
-	"os"
+	"log"
 	"strings"
 )
 
@@ -12,9 +11,8 @@ func PostResolve(client string, check string) string {
 
 	_, status := postAPI("/resolve", payload)
 	if status != 202 {
-		fmt.Println(httpStatus(status))
-		os.Exit(1)
+		log.Fatal(httpStatus(status))
 	}
 
-	return httpStatus(status)
+	return httpStatus(status) + "\n"
 }
