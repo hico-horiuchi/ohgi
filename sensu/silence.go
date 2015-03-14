@@ -26,7 +26,7 @@ func GetSilence() string {
 
 	contents, status := getAPI("/stashes")
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &silences)
@@ -79,7 +79,7 @@ func PostSilence(client string, check string, expiration string, reason string) 
 
 	_, status := postAPI("/stashes", payload)
 	if status != 201 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	return httpStatus(status) + "\n"
@@ -96,7 +96,7 @@ func DeleteSilence(client string, check string) string {
 
 	_, status := deleteAPI("/stashes/" + path)
 	if status != 204 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	return httpStatus(status) + "\n"

@@ -24,7 +24,7 @@ func GetInfo() string {
 
 	contents, status := getAPI("/info")
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &i)

@@ -21,7 +21,7 @@ func GetEvents() string {
 
 	contents, status := getAPI("/events")
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &events)
@@ -46,7 +46,7 @@ func GetEventsClient(client string) string {
 
 	contents, status := getAPI("/events/" + client)
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &events)
@@ -71,7 +71,7 @@ func GetEventsClientCheck(client string, check string) string {
 
 	contents, status := getAPI("/events/" + client + "/" + check)
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &e)
@@ -95,7 +95,7 @@ func GetEventsClientCheck(client string, check string) string {
 func DeleteEventsClientCheck(client string, check string) string {
 	_, status := deleteAPI("/events/" + client + "/" + check)
 	if status != 202 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	return httpStatus(status) + "\n"

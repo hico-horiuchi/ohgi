@@ -11,7 +11,7 @@ func PostResolve(client string, check string) string {
 
 	_, status := postAPI("/resolve", payload)
 	if status != 202 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	return httpStatus(status) + "\n"

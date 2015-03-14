@@ -14,7 +14,7 @@ func makeRequest(method string, namespace string, payload io.Reader) *http.Reque
 	request, err := http.NewRequest(method, url, payload)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 
 	if config.User != "" && config.Password != "" {
@@ -33,14 +33,14 @@ func doAPI(method string, namespace string, payload io.Reader) ([]byte, int) {
 	response, err := http.DefaultClient.Do(request)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 
 	status := response.StatusCode
 	body, err := ioutil.ReadAll(response.Body)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 
 	defer response.Body.Close()

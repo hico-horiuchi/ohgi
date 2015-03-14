@@ -27,7 +27,7 @@ func GetChecks() string {
 
 	contents, status := getAPI("/checks")
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &checks)
@@ -53,7 +53,7 @@ func GetChecksWildcard(pattern string) string {
 
 	contents, status := getAPI("/checks")
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &checks)
@@ -85,7 +85,7 @@ func GetChecksCheck(check string) string {
 
 	contents, status := getAPI("/checks/" + check)
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &c)

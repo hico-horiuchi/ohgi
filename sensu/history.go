@@ -18,7 +18,7 @@ func GetHistory(client string) string {
 
 	contents, status := getAPI("/clients/" + client + "/history")
 	if status != 200 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	json.Unmarshal(contents, &histories)

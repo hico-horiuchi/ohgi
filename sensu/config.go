@@ -19,7 +19,7 @@ func loadConfig() configStruct {
 	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.sensu.json")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 
 	json.Unmarshal(bytes, &config)

@@ -11,7 +11,7 @@ func PostRequest(check string, subscriber string) string {
 
 	_, status := postAPI("/request", payload)
 	if status != 202 {
-		log.Fatal(httpStatus(status))
+		log.Fatalln(httpStatus(status))
 	}
 
 	return httpStatus(status) + "\n"
