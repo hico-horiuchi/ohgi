@@ -39,12 +39,12 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Printf("%s", sensu.GetChecks())
+				fmt.Print(sensu.GetChecks())
 			case 1:
 				if strings.Contains(args[0], "*") {
-					fmt.Printf("%s", sensu.GetChecksWildcard(args[0]))
+					fmt.Print(sensu.GetChecksWildcard(args[0]))
 				} else {
-					fmt.Printf("%s", sensu.GetChecksCheck(args[0]))
+					fmt.Print(sensu.GetChecksCheck(args[0]))
 				}
 			}
 		},
@@ -57,9 +57,9 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 1:
-				fmt.Printf("%s", sensu.PostRequest(args[0], ""))
+				fmt.Print(sensu.PostRequest(args[0], ""))
 			case 2:
-				fmt.Printf("%s", sensu.PostRequest(args[0], args[1]))
+				fmt.Print(sensu.PostRequest(args[0], args[1]))
 			}
 		},
 	})
@@ -71,15 +71,15 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Printf("%s", sensu.GetClients(limit, offset))
+				fmt.Print(sensu.GetClients(limit, offset))
 			case 1:
 				if delete {
-					fmt.Printf("%s", sensu.DeleteClientsClient(args[0]))
+					fmt.Print(sensu.DeleteClientsClient(args[0]))
 				} else {
 					if strings.Contains(args[0], "*") {
-						fmt.Printf("%s", sensu.GetClientsWildcard(args[0]))
+						fmt.Print(sensu.GetClientsWildcard(args[0]))
 					} else {
-						fmt.Printf("%s", sensu.GetClientsClient(args[0]))
+						fmt.Print(sensu.GetClientsClient(args[0]))
 					}
 				}
 			}
@@ -97,7 +97,7 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 1:
-				fmt.Printf("%s", sensu.GetHistory(args[0]))
+				fmt.Print(sensu.GetHistory(args[0]))
 			}
 		},
 	})
@@ -109,14 +109,14 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Printf("%s", sensu.GetEvents())
+				fmt.Print(sensu.GetEvents())
 			case 1:
-				fmt.Printf("%s", sensu.GetEventsClient(args[0]))
+				fmt.Print(sensu.GetEventsClient(args[0]))
 			case 2:
 				if delete {
-					fmt.Printf("%s", sensu.DeleteEventsClientCheck(args[0], args[1]))
+					fmt.Print(sensu.DeleteEventsClientCheck(args[0], args[1]))
 				} else {
-					fmt.Printf("%s", sensu.GetEventsClientCheck(args[0], args[1]))
+					fmt.Print(sensu.GetEventsClientCheck(args[0], args[1]))
 				}
 			}
 		},
@@ -131,7 +131,7 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 2:
-				fmt.Printf("%s", sensu.PostResolve(args[0], args[1]))
+				fmt.Print(sensu.PostResolve(args[0], args[1]))
 			}
 		},
 	})
@@ -141,7 +141,7 @@ func main() {
 		Short: "Returns the API info",
 		Long:  "Returns the API info",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("%s", sensu.GetHealth(consumers, messages))
+			fmt.Print(sensu.GetHealth(consumers, messages))
 		},
 	}
 	healthCmd.Flags().IntVarP(&consumers, "consumers", "c", 1, "The minimum number of transport consumers to be considered healthy")
@@ -153,7 +153,7 @@ func main() {
 		Short: "Returns the API info",
 		Long:  "Returns the API info",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("%s", sensu.GetInfo())
+			fmt.Print(sensu.GetInfo())
 		},
 	})
 
@@ -164,18 +164,18 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Printf("%s", sensu.GetSilence())
+				fmt.Print(sensu.GetSilence())
 			case 1:
 				if delete {
-					fmt.Printf("%s", sensu.DeleteSilence(args[0], ""))
+					fmt.Print(sensu.DeleteSilence(args[0], ""))
 				} else {
-					fmt.Printf("%s", sensu.PostSilence(args[0], "", expiration, reason))
+					fmt.Print(sensu.PostSilence(args[0], "", expiration, reason))
 				}
 			case 2:
 				if delete {
-					fmt.Printf("%s", sensu.DeleteSilence(args[0], args[1]))
+					fmt.Print(sensu.DeleteSilence(args[0], args[1]))
 				} else {
-					fmt.Printf("%s", sensu.PostSilence(args[0], args[1], expiration, reason))
+					fmt.Print(sensu.PostSilence(args[0], args[1], expiration, reason))
 				}
 			}
 		},
@@ -190,7 +190,7 @@ func main() {
 		Short: "Print ohgi version",
 		Long:  "Print ohgi version",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("ohgi version %s\n", version)
+			fmt.Println("ohgi version", version)
 		},
 	})
 
