@@ -2,7 +2,6 @@ package sensu
 
 import (
 	"encoding/json"
-	"log"
 )
 
 type historyStruct struct {
@@ -17,9 +16,7 @@ func GetHistory(client string) string {
 	var result []byte
 
 	contents, status := getAPI("/clients/" + client + "/history")
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &histories)
 	if len(histories) == 0 {

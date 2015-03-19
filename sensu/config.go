@@ -3,7 +3,6 @@ package sensu
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -15,13 +14,11 @@ type configStruct struct {
 }
 
 func loadConfig() configStruct {
-	var config configStruct
 	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.sensu.json")
+	checkError(err)
 
-	if err != nil {
-		log.Fatalln(err)
-	}
-
+	var config configStruct
 	json.Unmarshal(bytes, &config)
+
 	return config
 }

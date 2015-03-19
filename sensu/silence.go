@@ -3,7 +3,6 @@ package sensu
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -25,9 +24,7 @@ func GetSilence() string {
 	var expire string
 
 	contents, status := getAPI("/stashes")
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &silences)
 	if len(silences) == 0 {
@@ -78,9 +75,7 @@ func PostSilence(client string, check string, expiration string, reason string) 
 	payload := strings.NewReader(body)
 
 	_, status := postAPI("/stashes", payload)
-	if status != 201 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	return httpStatus(status) + "\n"
 }
@@ -95,9 +90,7 @@ func DeleteSilence(client string, check string) string {
 	}
 
 	_, status := deleteAPI("/stashes/" + path)
-	if status != 204 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	return httpStatus(status) + "\n"
 }

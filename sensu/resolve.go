@@ -1,7 +1,6 @@
 package sensu
 
 import (
-	"log"
 	"strings"
 )
 
@@ -10,9 +9,7 @@ func PostResolve(client string, check string) string {
 	payload := strings.NewReader(body)
 
 	_, status := postAPI("/resolve", payload)
-	if status != 202 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	return httpStatus(status) + "\n"
 }

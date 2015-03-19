@@ -2,7 +2,6 @@ package sensu
 
 import (
 	"encoding/json"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -20,9 +19,7 @@ func GetEvents() string {
 	var result []byte
 
 	contents, status := getAPI("/events")
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &events)
 	if len(events) == 0 {
@@ -45,9 +42,7 @@ func GetEventsClient(client string) string {
 	var result []byte
 
 	contents, status := getAPI("/events/" + client)
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &events)
 	if len(events) == 0 {
@@ -70,9 +65,7 @@ func GetEventsClientCheck(client string, check string) string {
 	var result []byte
 
 	contents, status := getAPI("/events/" + client + "/" + check)
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &e)
 
@@ -94,9 +87,7 @@ func GetEventsClientCheck(client string, check string) string {
 
 func DeleteEventsClientCheck(client string, check string) string {
 	_, status := deleteAPI("/events/" + client + "/" + check)
-	if status != 202 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	return httpStatus(status) + "\n"
 }

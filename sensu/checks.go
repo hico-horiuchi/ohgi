@@ -2,7 +2,6 @@ package sensu
 
 import (
 	"encoding/json"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -26,9 +25,7 @@ func GetChecks() string {
 	var result []byte
 
 	contents, status := getAPI("/checks")
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &checks)
 	if len(checks) == 0 {
@@ -52,9 +49,7 @@ func GetChecksWildcard(pattern string) string {
 	re := regexp.MustCompile(strings.Replace(pattern, "*", ".*", -1))
 
 	contents, status := getAPI("/checks")
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &checks)
 	for i := range checks {
@@ -84,9 +79,7 @@ func GetChecksCheck(check string) string {
 	var result []byte
 
 	contents, status := getAPI("/checks/" + check)
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &c)
 

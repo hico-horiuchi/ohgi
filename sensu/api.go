@@ -3,7 +3,6 @@ package sensu
 import (
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -12,10 +11,7 @@ func makeRequest(method string, namespace string, payload io.Reader) *http.Reque
 	config := loadConfig()
 	url := "http://" + config.Host + ":" + strconv.Itoa(config.Port) + namespace
 	request, err := http.NewRequest(method, url, payload)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
+	checkError(err)
 
 	if config.User != "" && config.Password != "" {
 		request.SetBasicAuth(config.User, config.Password)
@@ -31,17 +27,11 @@ func makeRequest(method string, namespace string, payload io.Reader) *http.Reque
 func doAPI(method string, namespace string, payload io.Reader) ([]byte, int) {
 	request := makeRequest(method, namespace, payload)
 	response, err := http.DefaultClient.Do(request)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
+	checkError(err)
 
 	status := response.StatusCode
 	body, err := ioutil.ReadAll(response.Body)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
+	checkError(err)
 
 	defer response.Body.Close()
 	return body, status

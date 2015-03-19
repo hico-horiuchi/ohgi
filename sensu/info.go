@@ -2,7 +2,6 @@ package sensu
 
 import (
 	"encoding/json"
-	"log"
 	"strconv"
 )
 
@@ -23,9 +22,7 @@ func GetInfo() string {
 	var result []byte
 
 	contents, status := getAPI("/info")
-	if status != 200 {
-		log.Fatalln(httpStatus(status))
-	}
+	checkStatus(status)
 
 	json.Unmarshal(contents, &i)
 

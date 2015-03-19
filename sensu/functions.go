@@ -1,6 +1,7 @@
 package sensu
 
 import (
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -48,12 +49,16 @@ func stoe(expiration string) int64 {
 	return expire
 }
 
-func bold(str string) string {
-	if !EscapeSequence {
-		return str
+func checkError(err error) {
+	if err != nil {
+		log.Fatalln(err)
 	}
+}
 
-	return "\x1b[1m" + str + "\x1b[0m"
+func checkStatus(status int) {
+	if status >= 300 {
+		log.Fatalln(httpStatus(status))
+	}
 }
 
 func httpStatus(status int) string {
@@ -78,6 +83,14 @@ func httpStatus(status int) string {
 		return strconv.Itoa(status) + " Service Unavailable"
 	}
 	return ""
+}
+
+func bold(str string) string {
+	if !EscapeSequence {
+		return str
+	}
+
+	return "\x1b[1m" + str + "\x1b[0m"
 }
 
 func statusFg(status int) string {
