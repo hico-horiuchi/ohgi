@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./sensu"
+	"./ohgi"
 	"fmt"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
@@ -23,7 +23,7 @@ func main() {
 	)
 
 	if !isatty.IsTerminal(os.Stdout.Fd()) {
-		sensu.EscapeSequence = false
+		ohgi.EscapeSequence = false
 	}
 
 	rootCmd := &cobra.Command{
@@ -39,12 +39,12 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Print(sensu.GetChecks())
+				fmt.Print(ohgi.GetChecks())
 			case 1:
 				if strings.Contains(args[0], "*") {
-					fmt.Print(sensu.GetChecksWildcard(args[0]))
+					fmt.Print(ohgi.GetChecksWildcard(args[0]))
 				} else {
-					fmt.Print(sensu.GetChecksCheck(args[0]))
+					fmt.Print(ohgi.GetChecksCheck(args[0]))
 				}
 			}
 		},
@@ -57,9 +57,9 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 1:
-				fmt.Print(sensu.PostRequest(args[0], ""))
+				fmt.Print(ohgi.PostRequest(args[0], ""))
 			case 2:
-				fmt.Print(sensu.PostRequest(args[0], args[1]))
+				fmt.Print(ohgi.PostRequest(args[0], args[1]))
 			}
 		},
 	})
@@ -71,15 +71,15 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Print(sensu.GetClients(limit, offset))
+				fmt.Print(ohgi.GetClients(limit, offset))
 			case 1:
 				if delete {
-					fmt.Print(sensu.DeleteClientsClient(args[0]))
+					fmt.Print(ohgi.DeleteClientsClient(args[0]))
 				} else {
 					if strings.Contains(args[0], "*") {
-						fmt.Print(sensu.GetClientsWildcard(args[0]))
+						fmt.Print(ohgi.GetClientsWildcard(args[0]))
 					} else {
-						fmt.Print(sensu.GetClientsClient(args[0]))
+						fmt.Print(ohgi.GetClientsClient(args[0]))
 					}
 				}
 			}
@@ -97,7 +97,7 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 1:
-				fmt.Print(sensu.GetHistory(args[0]))
+				fmt.Print(ohgi.GetHistory(args[0]))
 			}
 		},
 	})
@@ -109,14 +109,14 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Print(sensu.GetEvents())
+				fmt.Print(ohgi.GetEvents())
 			case 1:
-				fmt.Print(sensu.GetEventsClient(args[0]))
+				fmt.Print(ohgi.GetEventsClient(args[0]))
 			case 2:
 				if delete {
-					fmt.Print(sensu.DeleteEventsClientCheck(args[0], args[1]))
+					fmt.Print(ohgi.DeleteEventsClientCheck(args[0], args[1]))
 				} else {
-					fmt.Print(sensu.GetEventsClientCheck(args[0], args[1]))
+					fmt.Print(ohgi.GetEventsClientCheck(args[0], args[1]))
 				}
 			}
 		},
@@ -131,7 +131,7 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 2:
-				fmt.Print(sensu.PostResolve(args[0], args[1]))
+				fmt.Print(ohgi.PostResolve(args[0], args[1]))
 			}
 		},
 	})
@@ -141,7 +141,7 @@ func main() {
 		Short: "Returns the API info",
 		Long:  "Returns the API info",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Print(sensu.GetHealth(consumers, messages))
+			fmt.Print(ohgi.GetHealth(consumers, messages))
 		},
 	}
 	healthCmd.Flags().IntVarP(&consumers, "consumers", "c", 1, "The minimum number of transport consumers to be considered healthy")
@@ -153,7 +153,7 @@ func main() {
 		Short: "Returns the API info",
 		Long:  "Returns the API info",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Print(sensu.GetInfo())
+			fmt.Print(ohgi.GetInfo())
 		},
 	})
 
@@ -164,18 +164,18 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Print(sensu.GetSilence())
+				fmt.Print(ohgi.GetSilence())
 			case 1:
 				if delete {
-					fmt.Print(sensu.DeleteSilence(args[0], ""))
+					fmt.Print(ohgi.DeleteSilence(args[0], ""))
 				} else {
-					fmt.Print(sensu.PostSilence(args[0], "", expiration, reason))
+					fmt.Print(ohgi.PostSilence(args[0], "", expiration, reason))
 				}
 			case 2:
 				if delete {
-					fmt.Print(sensu.DeleteSilence(args[0], args[1]))
+					fmt.Print(ohgi.DeleteSilence(args[0], args[1]))
 				} else {
-					fmt.Print(sensu.PostSilence(args[0], args[1], expiration, reason))
+					fmt.Print(ohgi.PostSilence(args[0], args[1], expiration, reason))
 				}
 			}
 		},
