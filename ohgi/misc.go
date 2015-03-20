@@ -1,4 +1,4 @@
-package sensu
+package ohgi
 
 import (
 	"log"
