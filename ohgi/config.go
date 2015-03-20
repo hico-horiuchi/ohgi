@@ -14,7 +14,7 @@ type configStruct struct {
 }
 
 func loadConfig() configStruct {
-	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.sensu.json")
+	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.ohgi.json")
 	checkError(err)
 
 	var config configStruct

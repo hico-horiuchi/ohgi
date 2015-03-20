@@ -17,7 +17,7 @@
 
 #### Configuration
 
-`~/.sensu.json`
+`~/.ohgi.json`
 
     {
       "host": "127.0.0.1",  // Required
