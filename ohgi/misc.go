@@ -1,7 +1,8 @@
 package ohgi
 
 import (
-	"log"
+	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -51,13 +52,15 @@ func stoe(expiration string) int64 {
 
 func checkError(err error) {
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
 
 func checkStatus(status int) {
 	if status >= 300 {
-		log.Fatalln(httpStatus(status))
+		fmt.Println(httpStatus(status))
+		os.Exit(1)
 	}
 }
 
