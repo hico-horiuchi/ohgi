@@ -96,6 +96,23 @@ func bold(str string) string {
 	return "\x1b[1m" + str + "\x1b[0m"
 }
 
+func historyFg(history string) string {
+	if !EscapeSequence {
+		return history
+	}
+
+	var format *regexp.Regexp
+
+	format = regexp.MustCompile("(^| )(0)(|,)")
+	history = format.ReplaceAllString(history, "\x1b[32m$1$2$3\x1b[0m")
+	format = regexp.MustCompile("(^| )(1)(|,)")
+	history = format.ReplaceAllString(history, "\x1b[33m$1$2$3\x1b[0m")
+	format = regexp.MustCompile("(^| )(2)(|,)")
+	history = format.ReplaceAllString(history, "\x1b[31m$1$2$3\x1b[0m")
+
+	return history
+}
+
 func statusFg(status int) string {
 	if !EscapeSequence {
 		switch status {
