@@ -27,8 +27,7 @@ func GetEvents() string {
 	}
 
 	result = append(result, bold("  CLIENT                                  CHECK                         #         TIMESTAMP\n")...)
-	for i := range events {
-		e := events[i]
+	for _, e := range events {
 		occurrences := strconv.Itoa(e.Occurrences)
 		line := statusBg(e.Check.Status) + fillSpace(e.Client.Name, 40) + fillSpace(e.Check.Name, 30) + fillSpace(occurrences, 10) + utoa(e.Client.Timestamp) + "\n"
 		result = append(result, line...)
@@ -50,8 +49,7 @@ func GetEventsClient(client string) string {
 	}
 
 	result = append(result, bold("  CHECK                         OUTPUT                                            TIMESTAMP\n")...)
-	for i := range events {
-		e := events[i]
+	for _, e := range events {
 		output := strings.Replace(e.Check.Output, "\n", " ", -1)
 		line := statusBg(e.Check.Status) + fillSpace(e.Check.Name, 30) + fillSpace(output, 50) + utoa(e.Client.Timestamp) + "\n"
 		result = append(result, line...)

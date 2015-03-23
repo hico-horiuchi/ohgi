@@ -33,8 +33,7 @@ func GetChecks() string {
 	}
 
 	result = append(result, bold("NAME                          COMMAND                                                     INTERVAL\n")...)
-	for i := range checks {
-		c := checks[i]
+	for _, c := range checks {
 		line := fillSpace(c.Name, 30) + fillSpace(c.Command, 60) + strconv.Itoa(c.Interval) + "\n"
 		result = append(result, line...)
 	}
@@ -52,8 +51,7 @@ func GetChecksWildcard(pattern string) string {
 	checkStatus(status)
 
 	json.Unmarshal(contents, &checks)
-	for i := range checks {
-		c := checks[i]
+	for i, c := range checks {
 		match := re.FindStringSubmatch(c.Name)
 		if len(match) > 0 {
 			matches = append(matches, i)

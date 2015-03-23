@@ -24,8 +24,7 @@ func GetHistory(client string) string {
 	}
 
 	result = append(result, bold("CHECK                         HISTORY                                         TIMESTAMP\n")...)
-	for i := range histories {
-		h := histories[i]
+	for _, h := range histories {
 		history := stoa(h.History, ", ")
 		line := fillSpace(h.Check, 30) + fillSpace(history, 48) + utoa(h.Last_execution) + "\n"
 		result = append(result, line...)

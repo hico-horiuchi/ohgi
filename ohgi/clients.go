@@ -27,8 +27,7 @@ func GetClients(limit int, offset int) string {
 	}
 
 	result = append(result, bold("NAME                                    ADDRESS                                 TIMESTAMP\n")...)
-	for i := range clients {
-		c := clients[i]
+	for _, c := range clients {
 		line := fillSpace(c.Name, 40) + fillSpace(c.Address, 40) + utoa(c.Timestamp) + "\n"
 		result = append(result, line...)
 	}
@@ -46,8 +45,7 @@ func GetClientsWildcard(pattern string) string {
 	checkStatus(status)
 
 	json.Unmarshal(contents, &clients)
-	for i := range clients {
-		c := clients[i]
+	for i, c := range clients {
 		match := re.FindStringSubmatch(c.Name)
 		if len(match) > 0 {
 			matches = append(matches, i)

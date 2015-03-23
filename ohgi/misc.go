@@ -19,8 +19,8 @@ func utoa(timestamp int64) string {
 func stoa(arr []int, sep string) string {
 	var result []byte
 
-	for i := range arr {
-		line := strconv.Itoa(arr[i]) + sep
+	for _, i := range arr {
+		line := strconv.Itoa(i) + sep
 		result = append(result, line...)
 	}
 

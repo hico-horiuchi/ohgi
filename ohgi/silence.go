@@ -32,10 +32,8 @@ func GetSilence() string {
 	}
 
 	result = append(result, bold("CLIENT                                  CHECK                         REASON                        EXPIRATION\n")...)
-	for i := range silences {
-		s := silences[i]
+	for _, s := range silences {
 		path := strings.Split(s.Path, "/")
-
 		if path[0] != "silence" {
 			continue
 		} else if len(path) == 2 {
