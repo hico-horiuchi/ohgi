@@ -7,6 +7,7 @@
   - [Golang](https://golang.org/) >= 1
   - [Sensu](http://sensuapp.org/) >= 0.13
   - [spf13/cobra](https://github.com/spf13/cobra)
+  - [tcnksm/go-latest](https://github.com/tcnksm/go-latest)
 
 #### Installation
 
@@ -44,7 +45,7 @@
       health                       Returns the API info
       info                         Returns the API info
       silence [client] [check]     Returns a list of silences
-      version                      Print git revision of ohgi
+      version                      Print and check version of ohgi
       help [command]               Help about any command
     
     Use "ohgi help [command]" for more information about that command.

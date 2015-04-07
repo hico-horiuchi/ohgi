@@ -187,10 +187,10 @@ func main() {
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",
-		Short: "Print ohgi version",
-		Long:  "Print ohgi version",
+		Short: "Print and check version of ohgi",
+		Long:  "Print and check version of ohgi",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("ohgi version", version)
+			fmt.Print(ohgi.Version(version))
 		},
 	})
 
