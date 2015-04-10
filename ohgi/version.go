@@ -36,7 +36,7 @@ func Version(version string) string {
 				result = append(result, fmt.Sprintf("Latest version of ohgi is %s, please update it\n", res.Current)...)
 			}
 			return string(result)
-		case <-time.After(defaultTimeout):
+		case <-time.After(timeout):
 			return string(result)
 		}
 	}

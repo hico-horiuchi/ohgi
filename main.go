@@ -22,6 +22,7 @@ func main() {
 		reason     string
 	)
 
+	ohgi.LoadConfig()
 	if !isatty.IsTerminal(os.Stdout.Fd()) {
 		ohgi.EscapeSequence = false
 	}

@@ -8,7 +8,6 @@ import (
 )
 
 func makeRequest(method string, namespace string, payload io.Reader) *http.Request {
-	config := loadConfig()
 	url := "http://" + config.Host + ":" + strconv.Itoa(config.Port) + namespace
 	request, err := http.NewRequest(method, url, payload)
 	checkError(err)

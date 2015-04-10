@@ -24,7 +24,8 @@
       "host": "127.0.0.1",  // Required
       "port": 4567,         // Required
       "user": "",           // Optional
-      "password": ""        // Optional
+      "password": "",       // Optional
+      "timeout": 3          // Optional
     }
 
 #### Usage

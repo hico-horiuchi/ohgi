@@ -3,25 +3,29 @@ package ohgi
 import (
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"time"
 )
 
-var defaultTimeout = 1 * time.Second
+var config configStruct
+var timeout = 1 * time.Second
 
 type configStruct struct {
 	Host     string
 	Port     int
 	User     string
 	Password string
+	Timeout  int
 }
 
-func loadConfig() configStruct {
+func LoadConfig() {
 	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.ohgi.json")
 	checkError(err)
-
-	var config configStruct
 	json.Unmarshal(bytes, &config)
 
-	return config
+	if config.Timeout > 0 {
+		timeout = time.Duration(config.Timeout) * time.Second
+	}
+	http.DefaultClient.Timeout = timeout
 }
