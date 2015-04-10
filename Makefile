@@ -1,4 +1,4 @@
-VERSION     := 0.1.5
+VERSION     := 0.1.6
 GO_BUILDOPT := -ldflags '-s -w -X main.version $(VERSION)'
 
 run:
