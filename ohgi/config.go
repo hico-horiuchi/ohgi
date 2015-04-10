@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"time"
 )
+
+var defaultTimeout = 1 * time.Second
 
 type configStruct struct {
 	Host     string
