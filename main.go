@@ -1,12 +1,13 @@
 package main
 
 import (
-	"./ohgi"
 	"fmt"
-	"github.com/mattn/go-isatty"
-	"github.com/spf13/cobra"
 	"os"
 	"strings"
+
+	"./ohgi"
+	"github.com/mattn/go-isatty"
+	"github.com/spf13/cobra"
 )
 
 var version string

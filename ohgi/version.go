@@ -2,8 +2,9 @@ package ohgi
 
 import (
 	"fmt"
-	"github.com/tcnksm/go-latest"
 	"time"
+
+	"github.com/tcnksm/go-latest"
 )
 
 func verCheck(version string) <-chan *latest.CheckResponse {
