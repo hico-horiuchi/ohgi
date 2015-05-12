@@ -8,9 +8,9 @@ import (
 )
 
 type clientStruct struct {
-	Name          string
-	Address       string
-	Subscriptions []string
+	Name          string   `json:"name"`
+	Address       string   `json:"address"`
+	Subscriptions []string `json:"subscriptions"`
 	Timestamp     int64
 }
 
@@ -81,6 +81,23 @@ func GetClientsClient(client string) string {
 	result = append(result, (bold("TIMESTAMP      ") + utoa(c.Timestamp) + "\n")...)
 
 	return string(result)
+}
+
+func PostClients(name string, address string, subscriptions string) string {
+	c := clientStruct{
+		Name:          name,
+		Address:       address,
+		Subscriptions: strings.Split(subscriptions, ","),
+	}
+
+	body, err := json.Marshal(c)
+	checkError(err)
+
+	payload := strings.NewReader(string(body))
+	_, status := postAPI("/clients", payload)
+	checkStatus(status)
+
+	return httpStatus(status) + "\n"
 }
 
 func DeleteClientsClient(client string) string {

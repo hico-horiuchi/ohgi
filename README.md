@@ -40,6 +40,7 @@
       checks      List locally defined checks and request executions
       request     Issues a check execution request
       clients     List and delete client(s) information
+      jit         Dynamically created clients, added to the client registry
       history     Returns the history for a client
       events      List and resolve current events
       resolve     Resolves an event

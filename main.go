@@ -93,6 +93,20 @@ func main() {
 	rootCmd.AddCommand(clientsCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
+		Use:   "jit [client] [address]",
+		Short: "Dynamically created clients, added to the client registry",
+		Long:  "jit [client] [address]                  Create or update client data\njit [client] [address] [subscriptions]  Create or update client data",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 2:
+				fmt.Print(ohgi.PostClients(args[0], args[1], ""))
+			case 3:
+				fmt.Print(ohgi.PostClients(args[0], args[1], args[2]))
+			}
+		},
+	})
+
+	rootCmd.AddCommand(&cobra.Command{
 		Use:   "history [client]",
 		Short: "Returns the history for a client",
 		Long:  "history [client]  Returns the history for a client",
