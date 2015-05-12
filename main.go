@@ -36,7 +36,7 @@ func main() {
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "checks [check]",
-		Short: "Returns the list of checks",
+		Short: "List locally defined checks and request executions",
 		Long:  "checks          Returns the list of checks\nchecks [check]  Returns a check",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
@@ -68,7 +68,7 @@ func main() {
 
 	clientsCmd := &cobra.Command{
 		Use:   "clients [client]",
-		Short: "Returns the list of clients",
+		Short: "List and delete client(s) information",
 		Long:  "clients           Returns the list of clients\nclients [client]  Returns a client",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
@@ -89,13 +89,13 @@ func main() {
 	}
 	clientsCmd.Flags().IntVarP(&limit, "limit", "l", -1, "The number of clients to return")
 	clientsCmd.Flags().IntVarP(&offset, "offset", "o", -1, "The number of clients to offset before returning items")
-	clientsCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Removes a client, resolving its current events (delayed action)")
+	clientsCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Removes a client, resolving its current events")
 	rootCmd.AddCommand(clientsCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "history [client]",
-		Short: "Returns the client history",
-		Long:  "history [client]  Returns the client history",
+		Short: "Returns the history for a client",
+		Long:  "history [client]  Returns the history for a client",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 1:
@@ -107,7 +107,7 @@ func main() {
 	eventsCmd := &cobra.Command{
 		Use:   "events [client] [check]",
 		Short: "List and resolve current events",
-		Long:  "events                   List and resolve current events\nevents [client]          Returns the list of current events for a client\nevents [client] [check]  Returns an event",
+		Long:  "events                   Returns the list of current events\nevents [client]          Returns the list of current events for a given client\nevents [client] [check]  Returns an event for a given client & check name",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
@@ -123,13 +123,13 @@ func main() {
 			}
 		},
 	}
-	eventsCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Resolves an event (delayed action)")
+	eventsCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Resolves an event for a given check on a given client")
 	rootCmd.AddCommand(eventsCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "resolve [client] [check]",
-		Short: "Resolves an event (delayed action)",
-		Long:  "resolve [client] [check]  Resolves an event (delayed action)",
+		Short: "Resolves an event",
+		Long:  "resolve [client] [check]  Resolves an event",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 2:
@@ -140,20 +140,20 @@ func main() {
 
 	healthCmd := &cobra.Command{
 		Use:   "health",
-		Short: "Returns the API info",
-		Long:  "Returns the API info",
+		Short: "Check the status of the API's transport & Redis connections, and query the transport's status",
+		Long:  "health  Returns health information on transport & Redis connections",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Print(ohgi.GetHealth(consumers, messages))
 		},
 	}
 	healthCmd.Flags().IntVarP(&consumers, "consumers", "c", 1, "The minimum number of transport consumers to be considered healthy")
-	healthCmd.Flags().IntVarP(&messages, "messages", "m", 1, "The maximum number of transport queued messages to be considered healthy")
+	healthCmd.Flags().IntVarP(&messages, "messages", "m", 1, "The maximum ammount of transport queued messages to be considered healthy")
 	rootCmd.AddCommand(healthCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "info",
-		Short: "Returns the API info",
-		Long:  "Returns the API info",
+		Short: "List the Sensu version and the transport and Redis connection information",
+		Long:  "info  Returns information on the API",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Print(ohgi.GetInfo())
 		},
@@ -161,7 +161,7 @@ func main() {
 
 	silenceCmd := &cobra.Command{
 		Use:   "silence [client] [check]",
-		Short: "Returns a list of silences",
+		Short: "Create, list, and delete silences",
 		Long:  "silence                   Returns a list of silences\nsilence [client]          Create a silence\nsilence [client] [check]  Create a silence",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {

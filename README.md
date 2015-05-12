@@ -37,19 +37,22 @@
       ohgi [command]
     
     Available Commands:
-      checks [check]               Returns the list of checks
-      request [check] [subscriber] Issues a check execution request
-      clients [client]             Returns the list of clients
-      history [client]             Returns the client history
-      events [client] [check]      List and resolve current events
-      resolve [client] [check]     Resolves an event (delayed action)
-      health                       Returns the API info
-      info                         Returns the API info
-      silence [client] [check]     Returns a list of silences
-      version                      Print and check version of ohgi
-      help [command]               Help about any command
+      checks      List locally defined checks and request executions
+      request     Issues a check execution request
+      clients     List and delete client(s) information
+      history     Returns the history for a client
+      events      List and resolve current events
+      resolve     Resolves an event
+      health      Check the status of the API's transport & Redis connections, and query the transport's status
+      info        List the Sensu version and the transport and Redis connection information
+      silence     Create, list, and delete silences
+      version     Print and check version of ohgi
+      help        Help about any command
     
-    Use "ohgi help [command]" for more information about that command.
+    Flags:
+      -h, --help=false: help for ohgi
+    
+    Use "ohgi help [command]" for more information about a command.
 
 #### License
 

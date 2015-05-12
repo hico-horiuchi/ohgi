@@ -20,7 +20,7 @@ func GetHistory(client string) string {
 
 	json.Unmarshal(contents, &histories)
 	if len(histories) == 0 {
-		return "No historiess\n"
+		return "No histories\n"
 	}
 
 	result = append(result, bold("CHECK                         HISTORY                                         TIMESTAMP\n")...)
