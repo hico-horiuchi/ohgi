@@ -1,4 +1,4 @@
-## ohgi v0.1.7
+## ohgi v0.2.0
 
 ![image.png](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.png)
 
@@ -38,7 +38,7 @@
       "timeout": 3                  // Optional
     }
 
-Specify a datacenter by `-x`(`--datacenter`) option as below.
+Specify a datacenter by `-x`(`--datacenter`) option as below.  
 If datacenter is not specified, use first of `datacenters`.
 
     $ ohgi -x server-1 events
