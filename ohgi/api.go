@@ -8,12 +8,12 @@ import (
 )
 
 func makeRequest(method string, namespace string, payload io.Reader) *http.Request {
-	url := "http://" + config.Host + ":" + strconv.Itoa(config.Port) + namespace
+	url := "http://" + datacenter.Host + ":" + strconv.Itoa(datacenter.Port) + namespace
 	request, err := http.NewRequest(method, url, payload)
 	checkError(err)
 
-	if config.User != "" && config.Password != "" {
-		request.SetBasicAuth(config.User, config.Password)
+	if datacenter.User != "" && datacenter.Password != "" {
+		request.SetBasicAuth(datacenter.User, datacenter.Password)
 	}
 
 	if payload != nil {

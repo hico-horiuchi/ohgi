@@ -21,12 +21,27 @@
 `~/.ohgi.json`
 
     {
-      "host": "127.0.0.1",  // Required
-      "port": 4567,         // Required
-      "user": "",           // Optional
-      "password": "",       // Optional
-      "timeout": 3          // Optional
+      "datacenters": [
+        {
+          "name": "server-1",       // Required
+          "host": "192.168.11.10",  // Required
+          "port": 4567,             // Required
+          "user": "sensu-1",        // Optional
+          "password": "password"    // Optional
+        },
+        {
+          "name": "server-2",
+          "host": "192.168.11.20",
+          "port": 4567
+        }
+      ],
+      "timeout": 3                  // Optional
     }
+
+Specify a datacenter by `-x`(`--datacenter`) option as below.
+If datacenter is not specified, use first of `datacenters`.
+
+    $ ohgi -x server-1 events
 
 #### Usage
 
@@ -51,6 +66,7 @@
       help        Help about any command
     
     Flags:
+      -x, --datacenter="": Specify a datacenter
       -h, --help=false: help for ohgi
     
     Use "ohgi help [command]" for more information about a command.
