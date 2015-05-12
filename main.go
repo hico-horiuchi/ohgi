@@ -14,6 +14,7 @@ var version string
 
 func main() {
 	var (
+		datacenter string
 		limit      int
 		offset     int
 		delete     bool
@@ -23,7 +24,6 @@ func main() {
 		reason     string
 	)
 
-	ohgi.LoadConfig()
 	if !isatty.IsTerminal(os.Stdout.Fd()) {
 		ohgi.EscapeSequence = false
 	}
@@ -32,7 +32,11 @@ func main() {
 		Use:   "ohgi",
 		Short: "Sensu command-line tool by golang",
 		Long:  "Sensu command-line tool by golang\nhttps://github.com/hico-horiuchi/ohgi",
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			ohgi.LoadConfig(datacenter)
+		},
 	}
+	rootCmd.PersistentFlags().StringVarP(&datacenter, "datacenter", "x", "", "Specify a datacenter")
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "checks [check]",
