@@ -39,7 +39,7 @@ func GetClientsWildcard(pattern string) string {
 	var clients []clientStruct
 	var result []byte
 	var matches []int
-	re := regexp.MustCompile(strings.Replace(pattern, "*", ".*", -1))
+	re := regexp.MustCompile("^" + strings.Replace(pattern, "*", ".*", -1) + "$")
 
 	contents, status := getAPI("/clients")
 	checkStatus(status)

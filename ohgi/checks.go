@@ -45,7 +45,7 @@ func GetChecksWildcard(pattern string) string {
 	var checks []checkStruct
 	var result []byte
 	var matches []int
-	re := regexp.MustCompile(strings.Replace(pattern, "*", ".*", -1))
+	re := regexp.MustCompile("^" + strings.Replace(pattern, "*", ".*", -1) + "$")
 
 	contents, status := getAPI("/checks")
 	checkStatus(status)
