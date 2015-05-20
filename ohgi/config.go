@@ -9,15 +9,15 @@ import (
 	"time"
 )
 
-var datacenter datacentorStruct
+var datacenter datacenterStruct
 var timeout = 3 * time.Second
 
 type configStruct struct {
-	Datacenters []datacentorStruct
+	Datacenters []datacenterStruct
 	Timeout     int
 }
 
-type datacentorStruct struct {
+type datacenterStruct struct {
 	Name     string
 	Host     string
 	Port     int
@@ -41,10 +41,10 @@ func LoadConfig(dc string) {
 	http.DefaultClient.Timeout = timeout
 }
 
-func (c configStruct) selectDatacenter(name string) (datacentorStruct, error) {
+func (c configStruct) selectDatacenter(name string) (datacenterStruct, error) {
 	switch {
 	case len(c.Datacenters) < 1:
-		return datacentorStruct{}, errors.New("ohgi: no datacenters in config")
+		return datacenterStruct{}, errors.New("ohgi: no datacenters in config")
 	case name == "":
 		return c.Datacenters[0], nil
 	}
@@ -55,5 +55,5 @@ func (c configStruct) selectDatacenter(name string) (datacentorStruct, error) {
 		}
 	}
 
-	return datacentorStruct{}, errors.New("ohgi: no such datacenter in config")
+	return datacenterStruct{}, errors.New("ohgi: no such datacenter in config")
 }
