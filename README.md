@@ -6,14 +6,12 @@
 
   - [Golang](https://golang.org/) >= 1
   - [Sensu](http://sensuapp.org/) >= 0.13
-  - [spf13/cobra](https://github.com/spf13/cobra)
-  - [tcnksm/go-latest](https://github.com/tcnksm/go-latest)
 
 #### Installation
 
     $ git clone git://github.com/hico-horiuchi/ohgi.git
     $ cd ohgi
-    $ go get ./...
+    $ make gom
     $ sudo make install
 
 #### Configuration

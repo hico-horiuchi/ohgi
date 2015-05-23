@@ -1,0 +1,6 @@
+gom 'github.com/spf13/cobra'
+gom 'github.com/tcnksm/go-latest'
+
+group :development do
+  gom 'golang.org/x/tools/cmd/goimports'
+end
