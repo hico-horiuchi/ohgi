@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"./ohgi"
-	"github.com/mattn/go-isatty"
+	isatty "github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
 
@@ -207,8 +207,8 @@ func main() {
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",
-		Short: "Print and check version of ohgi",
-		Long:  "Print and check version of ohgi",
+		Short: "Print and check the version of ohgi",
+		Long:  "version  Print and check the version of ohgi",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Print(ohgi.Version(version))
 		},
