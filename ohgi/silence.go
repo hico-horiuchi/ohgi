@@ -1,60 +1,59 @@
 package ohgi
 
 import (
-	"encoding/json"
-	"fmt"
-	"strconv"
 	"strings"
 	"time"
+
+	"../sensu"
 )
 
 type silenceStruct struct {
-	Path    string
-	Content struct {
-		Reason    string
-		Source    string
-		Timestamp float32
-	}
-	Expire int64
+	sensu.StashStruct
+	Content contentStruct `json:"content"`
 }
 
-func GetSilence() string {
+type contentStruct struct {
+	Timestamp float64 `json:"timestamp"`
+	Source    string  `json:"source"`
+	Reason    string  `json:"reason"`
+}
+
+func GetSilence(api *sensu.API) string {
 	var silences []silenceStruct
-	var result []byte
+	var line string
+	var path []string
 	var expire string
 
-	contents, status := getAPI("/stashes")
-	checkStatus(status)
+	err := api.GetStashes(&silences, -1, -1)
+	checkError(err)
 
-	json.Unmarshal(contents, &silences)
 	if len(silences) == 0 {
-		return "No silences\n"
+		return "No silence stashes\n"
 	}
 
-	result = append(result, bold("CLIENT                                  CHECK                         REASON                        EXPIRATION\n")...)
-	for _, s := range silences {
-		path := strings.Split(s.Path, "/")
+	result := []byte(bold("CLIENT                                  CHECK                         REASON                        EXPIRATION\n"))
+	for _, silence := range silences {
+		path = strings.Split(silence.Path, "/")
 		if path[0] != "silence" {
 			continue
 		} else if len(path) == 2 {
 			path = append(path, "")
 		}
 
-		if s.Expire == -1 {
+		if silence.Expire == -1 {
 			expire = "Never"
 		} else {
-			expire = utoa(time.Now().Unix() + s.Expire)
+			expire = utoa(time.Now().Unix() + silence.Expire)
 		}
 
-		line := fillSpace(path[1], 40) + fillSpace(path[2], 30) + fillSpace(s.Content.Reason, 30) + expire + "\n"
+		line = fillSpace(path[1], 40) + fillSpace(path[2], 30) + fillSpace(silence.Content.Reason, 30) + expire + "\n"
 		result = append(result, line...)
 	}
 
 	return string(result)
 }
 
-func PostSilence(client string, check string, expiration string, reason string) string {
-	var body string
+func PostSilence(api *sensu.API, client string, check string, expiration string, reason string) string {
 	var path string
 
 	if check == "" {
@@ -63,22 +62,25 @@ func PostSilence(client string, check string, expiration string, reason string) 
 		path = "silence/" + client + "/" + check
 	}
 
-	now := strconv.FormatInt(time.Now().Unix(), 10)
-	expire := stoe(expiration)
-	if expire == -1 {
-		body = fmt.Sprintf(`{"path":"%s","content":{"reason":"%s","source":"ohgi","timestamp":%s}}`, path, reason, now)
-	} else {
-		body = fmt.Sprintf(`{"path":"%s","content":{"reason":"%s","source":"ohgi","timestamp":%s},"expire":%d}`, path, reason, now, expire)
+	silence := silenceStruct{
+		StashStruct: sensu.StashStruct{
+			Path:   path,
+			Expire: stoe(expiration),
+		},
+		Content: contentStruct{
+			Timestamp: float64(time.Now().Unix()),
+			Source:    "ohgi",
+			Reason:    reason,
+		},
 	}
-	payload := strings.NewReader(body)
 
-	_, status := postAPI("/stashes", payload)
-	checkStatus(status)
+	err := api.PostStashes(silence)
+	checkError(err)
 
-	return httpStatus(status) + "\n"
+	return "Created\n"
 }
 
-func DeleteSilence(client string, check string) string {
+func DeleteSilence(api *sensu.API, client string, check string) string {
 	var path string
 
 	if check == "" {
@@ -87,8 +89,8 @@ func DeleteSilence(client string, check string) string {
 		path = "silence/" + client + "/" + check
 	}
 
-	_, status := deleteAPI("/stashes/" + path)
-	checkStatus(status)
+	err := api.DeleteStashesPath(path)
+	checkError(err)
 
-	return httpStatus(status) + "\n"
+	return "No Content\n"
 }

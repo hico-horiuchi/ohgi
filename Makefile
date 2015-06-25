@@ -9,7 +9,7 @@ run:
 	gom run main.go ${ARGS}
 
 fmt:
-	gom exec goimports -w *.go ohgi/*.go
+	gom exec goimports -w *.go sensu/*.go ohgi/*.go
 
 build: fmt
 	gom build $(GO_BUILDOPT) -o bin/ohgi main.go

@@ -1,15 +1,10 @@
 package ohgi
 
-import (
-	"strings"
-)
+import "../sensu"
 
-func PostRequest(check string, subscriber string) string {
-	body := `{"check":"` + check + `","subscribers":["` + subscriber + `"]}`
-	payload := strings.NewReader(body)
+func PostRequest(api *sensu.API, check string, subscribers []string) string {
+	err := api.PostRequest(check, subscribers)
+	checkError(err)
 
-	_, status := postAPI("/request", payload)
-	checkStatus(status)
-
-	return httpStatus(status) + "\n"
+	return "Accepted\n"
 }

@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tcnksm/go-latest"
+	latest "github.com/tcnksm/go-latest"
 )
+
+const TIMEOUT_SEC = 1
 
 func verCheck(version string) <-chan *latest.CheckResponse {
 	verCheckCh := make(chan *latest.CheckResponse)
@@ -37,7 +39,7 @@ func Version(version string) string {
 				result = append(result, fmt.Sprintf("Latest version of ohgi is %s, please update it\n", res.Current)...)
 			}
 			return string(result)
-		case <-time.After(timeout):
+		case <-time.After(TIMEOUT_SEC * time.Second):
 			return string(result)
 		}
 	}

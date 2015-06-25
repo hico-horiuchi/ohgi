@@ -1,12 +1,10 @@
 package ohgi
 
-import (
-	"fmt"
-)
+import "../sensu"
 
-func GetHealth(consumers int, messages int) string {
-	_, status := getAPI(fmt.Sprintf("/health?consumers=%d&messages=%d", consumers, messages))
-	checkStatus(status)
+func GetHealth(api *sensu.API, consumers int, messages int) string {
+	err := api.GetHealth(consumers, messages)
+	checkError(err)
 
-	return httpStatus(status) + "\n"
+	return "No Content\n"
 }

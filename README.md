@@ -32,12 +32,11 @@
           "host": "192.168.11.20",
           "port": 4567
         }
-      ],
-      "timeout": 3                  // Optional
+      ]
     }
 
 Specify a datacenter by `-x`(`--datacenter`) option as below.  
-If datacenter is not specified, use first of `datacenters`.
+If a datacenter is not specified, use first of `datacenters`.
 
     $ ohgi -x server-1 events
 
@@ -50,16 +49,16 @@ If datacenter is not specified, use first of `datacenters`.
       ohgi [command]
     
     Available Commands:
-      checks      List locally defined checks and request executions
-      request     Issues a check execution request
       clients     List and delete client(s) information
       jit         Dynamically created clients, added to the client registry
       history     Returns the history for a client
+      checks      List locally defined checks and request executions
+      request     Issues a check execution request
       events      List and resolve current events
       resolve     Resolves an event
+      silence     Create, list, and delete silence stashes
       health      Check the status of the API's transport & Redis connections, and query the transport's status
       info        List the Sensu version and the transport and Redis connection information
-      silence     Create, list, and delete silences
       version     Print and check version of ohgi
       help        Help about any command
     

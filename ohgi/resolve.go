@@ -1,15 +1,10 @@
 package ohgi
 
-import (
-	"strings"
-)
+import "../sensu"
 
-func PostResolve(client string, check string) string {
-	body := `{"client":"` + client + `","check":"` + check + `"}`
-	payload := strings.NewReader(body)
+func PostResolve(api *sensu.API, client string, check string) string {
+	err := api.PostResolve(client, check)
+	checkError(err)
 
-	_, status := postAPI("/resolve", payload)
-	checkStatus(status)
-
-	return httpStatus(status) + "\n"
+	return "Accepted\n"
 }

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"./ohgi"
+	"./sensu"
 	isatty "github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
@@ -18,10 +19,10 @@ func main() {
 		limit      int
 		offset     int
 		delete     bool
-		consumers  int
-		messages   int
 		expiration string
 		reason     string
+		consumers  int
+		messages   int
 	)
 
 	if !isatty.IsTerminal(os.Stdout.Fd()) {
@@ -33,42 +34,10 @@ func main() {
 		Short: "Sensu command-line tool by golang",
 		Long:  "Sensu command-line tool by golang\nhttps://github.com/hico-horiuchi/ohgi",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			ohgi.LoadConfig(datacenter)
+			sensu.DefaultAPI = ohgi.LoadConfig(datacenter)
 		},
 	}
 	rootCmd.PersistentFlags().StringVarP(&datacenter, "datacenter", "x", "", "Specify a datacenter")
-
-	rootCmd.AddCommand(&cobra.Command{
-		Use:   "checks [check]",
-		Short: "List locally defined checks and request executions",
-		Long:  "checks          Returns the list of checks\nchecks [check]  Returns a check",
-		Run: func(cmd *cobra.Command, args []string) {
-			switch len(args) {
-			case 0:
-				fmt.Print(ohgi.GetChecks())
-			case 1:
-				if strings.Contains(args[0], "*") {
-					fmt.Print(ohgi.GetChecksWildcard(args[0]))
-				} else {
-					fmt.Print(ohgi.GetChecksCheck(args[0]))
-				}
-			}
-		},
-	})
-
-	rootCmd.AddCommand(&cobra.Command{
-		Use:   "request [check] [subscriber]",
-		Short: "Issues a check execution request",
-		Long:  "request [check]               Issues a check execution request\nrequest [check] [subscriber]  Issues a check execution request",
-		Run: func(cmd *cobra.Command, args []string) {
-			switch len(args) {
-			case 1:
-				fmt.Print(ohgi.PostRequest(args[0], ""))
-			case 2:
-				fmt.Print(ohgi.PostRequest(args[0], args[1]))
-			}
-		},
-	})
 
 	clientsCmd := &cobra.Command{
 		Use:   "clients [client]",
@@ -77,15 +46,15 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Print(ohgi.GetClients(limit, offset))
+				fmt.Print(ohgi.GetClients(sensu.DefaultAPI, limit, offset))
 			case 1:
 				if delete {
-					fmt.Print(ohgi.DeleteClientsClient(args[0]))
+					fmt.Print(ohgi.DeleteClientsClient(sensu.DefaultAPI, args[0]))
 				} else {
 					if strings.Contains(args[0], "*") {
-						fmt.Print(ohgi.GetClientsWildcard(args[0]))
+						fmt.Print(ohgi.GetClientsWildcard(sensu.DefaultAPI, args[0]))
 					} else {
-						fmt.Print(ohgi.GetClientsClient(args[0]))
+						fmt.Print(ohgi.GetClientsClient(sensu.DefaultAPI, args[0]))
 					}
 				}
 			}
@@ -103,9 +72,9 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 2:
-				fmt.Print(ohgi.PostClients(args[0], args[1], ""))
+				fmt.Print(ohgi.PostClients(sensu.DefaultAPI, args[0], args[1], []string{}))
 			case 3:
-				fmt.Print(ohgi.PostClients(args[0], args[1], args[2]))
+				fmt.Print(ohgi.PostClients(sensu.DefaultAPI, args[0], args[1], strings.Split(args[2], ",")))
 			}
 		},
 	})
@@ -117,7 +86,39 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 1:
-				fmt.Print(ohgi.GetHistory(args[0]))
+				fmt.Print(ohgi.GetClientsHistory(sensu.DefaultAPI, args[0]))
+			}
+		},
+	})
+
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "checks [check]",
+		Short: "List locally defined checks and request executions",
+		Long:  "checks          Returns the list of checks\nchecks [check]  Returns a check",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 0:
+				fmt.Print(ohgi.GetChecks(sensu.DefaultAPI))
+			case 1:
+				if strings.Contains(args[0], "*") {
+					fmt.Print(ohgi.GetChecksWildcard(sensu.DefaultAPI, args[0]))
+				} else {
+					fmt.Print(ohgi.GetChecksCheck(sensu.DefaultAPI, args[0]))
+				}
+			}
+		},
+	})
+
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "request [check] [subscribers]",
+		Short: "Issues a check execution request",
+		Long:  "request [check]               Issues a check execution request\nrequest [check] [subscribers]  Issues a check execution request",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 1:
+				fmt.Print(ohgi.PostRequest(sensu.DefaultAPI, args[0], []string{}))
+			case 2:
+				fmt.Print(ohgi.PostRequest(sensu.DefaultAPI, args[0], strings.Split(args[1], ",")))
 			}
 		},
 	})
@@ -129,14 +130,14 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
-				fmt.Print(ohgi.GetEvents())
+				fmt.Print(ohgi.GetEvents(sensu.DefaultAPI))
 			case 1:
-				fmt.Print(ohgi.GetEventsClient(args[0]))
+				fmt.Print(ohgi.GetEventsClient(sensu.DefaultAPI, args[0]))
 			case 2:
 				if delete {
-					fmt.Print(ohgi.DeleteEventsClientCheck(args[0], args[1]))
+					fmt.Print(ohgi.DeleteEventsClientCheck(sensu.DefaultAPI, args[0], args[1]))
 				} else {
-					fmt.Print(ohgi.GetEventsClientCheck(args[0], args[1]))
+					fmt.Print(ohgi.GetEventsClientCheck(sensu.DefaultAPI, args[0], args[1]))
 				}
 			}
 		},
@@ -151,21 +152,49 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 2:
-				fmt.Print(ohgi.PostResolve(args[0], args[1]))
+				fmt.Print(ohgi.PostResolve(sensu.DefaultAPI, args[0], args[1]))
 			}
 		},
 	})
+
+	silenceCmd := &cobra.Command{
+		Use:   "silence [client] [check]",
+		Short: "Create, list, and delete silence stashes",
+		Long:  "silence                   Returns a list of silence stashes\nsilence [client]          Create a silence stash\nsilence [client] [check]  Create a silence stash",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 0:
+				fmt.Print(ohgi.GetSilence(sensu.DefaultAPI))
+			case 1:
+				if delete {
+					fmt.Print(ohgi.DeleteSilence(sensu.DefaultAPI, args[0], ""))
+				} else {
+					fmt.Print(ohgi.PostSilence(sensu.DefaultAPI, args[0], "", expiration, reason))
+				}
+			case 2:
+				if delete {
+					fmt.Print(ohgi.DeleteSilence(sensu.DefaultAPI, args[0], args[1]))
+				} else {
+					fmt.Print(ohgi.PostSilence(sensu.DefaultAPI, args[0], args[1], expiration, reason))
+				}
+			}
+		},
+	}
+	silenceCmd.Flags().StringVarP(&expiration, "expiration", "e", "", "e.g. 15m, 1h, 1d")
+	silenceCmd.Flags().StringVarP(&reason, "reason", "r", "", "Enter a reason")
+	silenceCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Remove silence stash")
+	rootCmd.AddCommand(silenceCmd)
 
 	healthCmd := &cobra.Command{
 		Use:   "health",
 		Short: "Check the status of the API's transport & Redis connections, and query the transport's status",
 		Long:  "health  Returns health information on transport & Redis connections",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Print(ohgi.GetHealth(consumers, messages))
+			fmt.Print(ohgi.GetHealth(sensu.DefaultAPI, consumers, messages))
 		},
 	}
 	healthCmd.Flags().IntVarP(&consumers, "consumers", "c", 1, "The minimum number of transport consumers to be considered healthy")
-	healthCmd.Flags().IntVarP(&messages, "messages", "m", 1, "The maximum ammount of transport queued messages to be considered healthy")
+	healthCmd.Flags().IntVarP(&messages, "messages", "m", 0, "The maximum ammount of transport queued messages to be considered healthy")
 	rootCmd.AddCommand(healthCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
@@ -173,37 +202,9 @@ func main() {
 		Short: "List the Sensu version and the transport and Redis connection information",
 		Long:  "info  Returns information on the API",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Print(ohgi.GetInfo())
+			fmt.Print(ohgi.GetInfo(sensu.DefaultAPI))
 		},
 	})
-
-	silenceCmd := &cobra.Command{
-		Use:   "silence [client] [check]",
-		Short: "Create, list, and delete silences",
-		Long:  "silence                   Returns a list of silences\nsilence [client]          Create a silence\nsilence [client] [check]  Create a silence",
-		Run: func(cmd *cobra.Command, args []string) {
-			switch len(args) {
-			case 0:
-				fmt.Print(ohgi.GetSilence())
-			case 1:
-				if delete {
-					fmt.Print(ohgi.DeleteSilence(args[0], ""))
-				} else {
-					fmt.Print(ohgi.PostSilence(args[0], "", expiration, reason))
-				}
-			case 2:
-				if delete {
-					fmt.Print(ohgi.DeleteSilence(args[0], args[1]))
-				} else {
-					fmt.Print(ohgi.PostSilence(args[0], args[1], expiration, reason))
-				}
-			}
-		},
-	}
-	silenceCmd.Flags().StringVarP(&expiration, "expiration", "e", "", "15m, 1h, 1d")
-	silenceCmd.Flags().StringVarP(&reason, "reason", "r", "", "Enter a reason")
-	silenceCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Delete a silence")
-	rootCmd.AddCommand(silenceCmd)
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "version",

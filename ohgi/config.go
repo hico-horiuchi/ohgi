@@ -4,56 +4,53 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"net/http"
 	"os"
-	"time"
+
+	"../sensu"
 )
 
-var datacenter datacenterStruct
-var timeout = 3 * time.Second
-
 type configStruct struct {
-	Datacenters []datacenterStruct
-	Timeout     int
+	Datacenters []datacenterStruct `json:"datacenters"`
 }
 
 type datacenterStruct struct {
-	Name     string
-	Host     string
-	Port     int
-	User     string
-	Password string
+	sensu.API
+	Name string `json:"name"`
 }
 
-func LoadConfig(dc string) {
-	var c configStruct
+func LoadConfig(name string) *sensu.API {
+	var config configStruct
 
 	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.ohgi.json")
 	checkError(err)
 
-	json.Unmarshal(bytes, &c)
-	datacenter, err = c.selectDatacenter(dc)
+	err = json.Unmarshal(bytes, &config)
 	checkError(err)
 
-	if c.Timeout > 0 {
-		timeout = time.Duration(c.Timeout) * time.Second
+	datacenter, err := config.selectDatacenter(name)
+	checkError(err)
+
+	return &sensu.API{
+		Host:     datacenter.Host,
+		Port:     datacenter.Port,
+		User:     datacenter.User,
+		Password: datacenter.Password,
 	}
-	http.DefaultClient.Timeout = timeout
 }
 
-func (c configStruct) selectDatacenter(name string) (datacenterStruct, error) {
+func (config configStruct) selectDatacenter(name string) (*datacenterStruct, error) {
 	switch {
-	case len(c.Datacenters) < 1:
-		return datacenterStruct{}, errors.New("ohgi: no datacenters in config")
+	case len(config.Datacenters) == 0:
+		return nil, errors.New("ohgi: no datacenters in config")
 	case name == "":
-		return c.Datacenters[0], nil
+		return &config.Datacenters[0], nil
 	}
 
-	for _, dc := range c.Datacenters {
-		if dc.Name == name {
-			return dc, nil
+	for _, datacenter := range config.Datacenters {
+		if datacenter.Name == name {
+			return &datacenter, nil
 		}
 	}
 
-	return datacenterStruct{}, errors.New("ohgi: no such datacenter in config")
+	return nil, errors.New("ohgi: no such datacenter in config")
 }

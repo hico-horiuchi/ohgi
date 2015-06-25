@@ -1,58 +1,43 @@
 package ohgi
 
 import (
-	"encoding/json"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"../sensu"
 )
 
-type checkStruct struct {
-	Name        string
-	Command     string
-	Subscribers []string
-	Interval    int
-	Issued      int
-	Executed    int
-	Output      string
-	Status      int
-	Duration    float32
-	History     []string
-}
+func GetChecks(api *sensu.API) string {
+	var line string
 
-func GetChecks() string {
-	var checks []checkStruct
-	var result []byte
+	checks, err := api.GetChecks()
+	checkError(err)
 
-	contents, status := getAPI("/checks")
-	checkStatus(status)
-
-	json.Unmarshal(contents, &checks)
 	if len(checks) == 0 {
 		return "No checks\n"
 	}
 
-	result = append(result, bold("NAME                          COMMAND                                                     INTERVAL\n")...)
-	for _, c := range checks {
-		line := fillSpace(c.Name, 30) + fillSpace(c.Command, 60) + strconv.Itoa(c.Interval) + "\n"
+	result := []byte(bold("NAME                          COMMAND                                                     INTERVAL\n"))
+	for _, check := range checks {
+		line = fillSpace(check.Name, 30) + fillSpace(check.Command, 60) + strconv.Itoa(check.Interval) + "\n"
 		result = append(result, line...)
 	}
 
 	return string(result)
 }
 
-func GetChecksWildcard(pattern string) string {
-	var checks []checkStruct
-	var result []byte
+func GetChecksWildcard(api *sensu.API, pattern string) string {
+	var match []string
 	var matches []int
+	var line string
+
+	checks, err := api.GetChecks()
+	checkError(err)
+
 	re := regexp.MustCompile("^" + strings.Replace(pattern, "*", ".*", -1) + "$")
-
-	contents, status := getAPI("/checks")
-	checkStatus(status)
-
-	json.Unmarshal(contents, &checks)
-	for i, c := range checks {
-		match := re.FindStringSubmatch(c.Name)
+	for i, check := range checks {
+		match = re.FindStringSubmatch(check.Name)
 		if len(match) > 0 {
 			matches = append(matches, i)
 		}
@@ -62,29 +47,27 @@ func GetChecksWildcard(pattern string) string {
 		return "No checks\n"
 	}
 
-	result = append(result, bold("NAME                          COMMAND                                                     INTERVAL\n")...)
+	result := []byte(bold("NAME                          COMMAND                                                     INTERVAL\n"))
 	for _, i := range matches {
-		c := checks[i]
-		line := fillSpace(c.Name, 30) + fillSpace(c.Command, 60) + strconv.Itoa(c.Interval) + "\n"
+		check := checks[i]
+		line = fillSpace(check.Name, 30) + fillSpace(check.Command, 60) + strconv.Itoa(check.Interval) + "\n"
 		result = append(result, line...)
 	}
 
 	return string(result)
 }
 
-func GetChecksCheck(check string) string {
-	var c checkStruct
+func GetChecksCheck(api *sensu.API, name string) string {
 	var result []byte
 
-	contents, status := getAPI("/checks/" + check)
-	checkStatus(status)
+	check, err := api.GetChecksCheck(name)
+	checkError(err)
 
-	json.Unmarshal(contents, &c)
-
-	result = append(result, (bold("NAME         ") + c.Name + "\n")...)
-	result = append(result, (bold("COMMAND      ") + c.Command + "\n")...)
-	result = append(result, (bold("SUBSCRIBERS  ") + strings.Join(c.Subscribers, ", ") + "\n")...)
-	result = append(result, (bold("INTERVAL     ") + strconv.Itoa(c.Interval) + "\n")...)
+	result = append(result, (bold("NAME         ") + check.Name + "\n")...)
+	result = append(result, (bold("COMMAND      ") + check.Command + "\n")...)
+	result = append(result, (bold("SUBSCRIBERS  ") + strings.Join(check.Subscribers, ", ") + "\n")...)
+	result = append(result, (bold("INTERVAL     ") + strconv.Itoa(check.Interval) + "\n")...)
+	result = append(result, (bold("HANDLERS     ") + strings.Join(check.Handlers, ", ") + "\n")...)
 
 	return string(result)
 }

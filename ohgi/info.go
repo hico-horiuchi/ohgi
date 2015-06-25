@@ -1,34 +1,20 @@
 package ohgi
 
 import (
-	"encoding/json"
 	"strconv"
+
+	"../sensu"
 )
 
-type infoStruct struct {
-	Sensu struct {
-		Version string
-	}
-	Transport struct {
-		Connected bool
-	}
-	Redis struct {
-		Connected bool
-	}
-}
-
-func GetInfo() string {
-	var i infoStruct
+func GetInfo(api *sensu.API) string {
 	var result []byte
 
-	contents, status := getAPI("/info")
-	checkStatus(status)
+	info, err := api.GetInfo()
+	checkError(err)
 
-	json.Unmarshal(contents, &i)
-
-	result = append(result, (bold("VERSION    ") + i.Sensu.Version + "\n")...)
-	result = append(result, (bold("TRANSPORT  ") + strconv.FormatBool(i.Transport.Connected) + "\n")...)
-	result = append(result, (bold("REDIS      ") + strconv.FormatBool(i.Redis.Connected) + "\n")...)
+	result = append(result, (bold("VERSION    ") + info.Sensu.Version + "\n")...)
+	result = append(result, (bold("TRANSPORT  ") + strconv.FormatBool(info.Transport.Connected) + "\n")...)
+	result = append(result, (bold("REDIS      ") + strconv.FormatBool(info.Redis.Connected) + "\n")...)
 
 	return string(result)
 }

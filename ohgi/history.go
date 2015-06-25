@@ -1,32 +1,20 @@
 package ohgi
 
-import (
-	"encoding/json"
-)
+import "../sensu"
 
-type historyStruct struct {
-	Check          string
-	History        []int
-	Last_execution int64
-	Last_status    int
-}
+func GetClientsHistory(api *sensu.API, client string) string {
+	var line string
 
-func GetHistory(client string) string {
-	var histories []historyStruct
-	var result []byte
+	histories, err := api.GetClientsHistory(client)
+	checkError(err)
 
-	contents, status := getAPI("/clients/" + client + "/history")
-	checkStatus(status)
-
-	json.Unmarshal(contents, &histories)
 	if len(histories) == 0 {
 		return "No histories\n"
 	}
 
-	result = append(result, bold("CHECK                         HISTORY                                         TIMESTAMP\n")...)
-	for _, h := range histories {
-		history := historyFg(fillSpace(stoa(h.History, ", "), 48))
-		line := fillSpace(h.Check, 30) + history + utoa(h.Last_execution) + "\n"
+	result := []byte(bold("CHECK                         HISTORY                                         TIMESTAMP\n"))
+	for _, history := range histories {
+		line = fillSpace(history.Check, 30) + paintHistory(fillSpace(stoa(history.History, ", "), 48)) + utoa(history.LastExecution) + "\n"
 		result = append(result, line...)
 	}
 

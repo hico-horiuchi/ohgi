@@ -1,91 +1,81 @@
 package ohgi
 
 import (
-	"encoding/json"
 	"strconv"
 	"strings"
+
+	"../sensu"
 )
 
-type eventStruct struct {
-	Id          string
-	Client      clientStruct
-	Check       checkStruct
-	Occurrences int
-	Action      string
-}
+func GetEvents(api *sensu.API) string {
+	var line string
 
-func GetEvents() string {
-	var events []eventStruct
-	var result []byte
+	events, err := api.GetEvents()
+	checkError(err)
 
-	contents, status := getAPI("/events")
-	checkStatus(status)
-
-	json.Unmarshal(contents, &events)
 	if len(events) == 0 {
 		return "No current events\n"
 	}
 
-	result = append(result, bold("  CLIENT                                  CHECK                         #         TIMESTAMP\n")...)
-	for _, e := range events {
-		occurrences := strconv.Itoa(e.Occurrences)
-		line := statusBg(e.Check.Status) + fillSpace(e.Client.Name, 40) + fillSpace(e.Check.Name, 30) + fillSpace(occurrences, 10) + utoa(e.Client.Timestamp) + "\n"
+	result := []byte(bold("  CLIENT                                  CHECK                         #         EXECUTED\n"))
+	for _, event := range events {
+		line = indicateStatus(event.Check.Status) + fillSpace(event.Client.Name, 40) + fillSpace(event.Check.Name, 30) + fillSpace(strconv.Itoa(event.Occurrences), 10) + utoa(event.Check.Executed) + "\n"
 		result = append(result, line...)
 	}
 
 	return string(result)
 }
 
-func GetEventsClient(client string) string {
-	var events []eventStruct
-	var result []byte
+func GetEventsClient(api *sensu.API, client string) string {
+	var line, output string
 
-	contents, status := getAPI("/events/" + client)
-	checkStatus(status)
+	events, err := api.GetEvents()
+	checkError(err)
 
-	json.Unmarshal(contents, &events)
 	if len(events) == 0 {
 		return "No current events for " + client + "\n"
 	}
 
-	result = append(result, bold("  CHECK                         OUTPUT                                            TIMESTAMP\n")...)
-	for _, e := range events {
-		output := strings.Replace(e.Check.Output, "\n", " ", -1)
-		line := statusBg(e.Check.Status) + fillSpace(e.Check.Name, 30) + fillSpace(output, 50) + utoa(e.Client.Timestamp) + "\n"
+	result := []byte(bold("  CHECK                         OUTPUT                                            EXECUTED\n"))
+	for _, event := range events {
+		output = strings.Replace(event.Check.Output, "\n", " ", -1)
+		line = indicateStatus(event.Check.Status) + fillSpace(event.Check.Name, 30) + fillSpace(output, 50) + utoa(event.Check.Executed) + "\n"
 		result = append(result, line...)
 	}
 
 	return string(result)
 }
 
-func GetEventsClientCheck(client string, check string) string {
-	var e eventStruct
+func GetEventsClientCheck(api *sensu.API, client string, check string) string {
 	var result []byte
 
-	contents, status := getAPI("/events/" + client + "/" + check)
-	checkStatus(status)
+	event, err := api.GetEventsClientCheck(client, check)
+	checkError(err)
 
-	json.Unmarshal(contents, &e)
-
-	result = append(result, (bold("CLIENT         ") + e.Client.Name + "\n")...)
-	result = append(result, (bold("ADDRESS        ") + e.Client.Address + "\n")...)
-	result = append(result, (bold("SUBSCRIPTIONS  ") + strings.Join(e.Client.Subscriptions, ", ") + "\n")...)
-	result = append(result, (bold("TIMESTAMP      ") + utoa(e.Client.Timestamp) + "\n")...)
-	result = append(result, (bold("CHECK          ") + e.Check.Name + "\n")...)
-	result = append(result, (bold("COMMAND        ") + e.Check.Command + "\n")...)
-	result = append(result, (bold("SUBSCRIBERS    ") + strings.Join(e.Check.Subscribers, ", ") + "\n")...)
-	result = append(result, (bold("INTERVAL       ") + strconv.Itoa(e.Check.Interval) + "\n")...)
-	result = append(result, (bold("OUTPUT         ") + strings.Replace(e.Check.Output, "\n", " ", -1) + "\n")...)
-	result = append(result, (bold("STATUS         ") + statusFg(e.Check.Status) + "\n")...)
-	result = append(result, (bold("HISTORY        ") + strings.Join(e.Check.History, ", ") + "\n")...)
-	result = append(result, (bold("OCCURRENCES    ") + strconv.Itoa(e.Occurrences) + "\n")...)
+	result = append(result, (bold("CLIENT         ") + event.Client.Name + "\n")...)
+	result = append(result, (bold("ADDRESS        ") + event.Client.Address + "\n")...)
+	result = append(result, (bold("SUBSCRIPTIONS  ") + strings.Join(event.Client.Subscriptions, ", ") + "\n")...)
+	result = append(result, (bold("TIMESTAMP      ") + utoa(event.Client.Timestamp) + "\n")...)
+	result = append(result, (bold("CHECK          ") + event.Check.Name + "\n")...)
+	result = append(result, (bold("COMMAND        ") + event.Check.Command + "\n")...)
+	result = append(result, (bold("SUBSCRIBERS    ") + strings.Join(event.Check.Subscribers, ", ") + "\n")...)
+	result = append(result, (bold("INTERVAL       ") + strconv.Itoa(event.Check.Interval) + "\n")...)
+	result = append(result, (bold("HANDLERS       ") + strings.Join(event.Check.Handlers, ", ") + "\n")...)
+	result = append(result, (bold("ISSUED         ") + utoa(event.Check.Issued) + "\n")...)
+	result = append(result, (bold("EXECUTED       ") + utoa(event.Check.Executed) + "\n")...)
+	result = append(result, (bold("OUTPUT         ") + strings.Replace(event.Check.Output, "\n", " ", -1) + "\n")...)
+	result = append(result, (bold("STATUS         ") + paintStatus(event.Check.Status) + "\n")...)
+	result = append(result, (bold("DURATION       ") + strconv.FormatFloat(event.Check.Duration, 'f', 3, 64) + "\n")...)
+	result = append(result, (bold("HISTORY        ") + paintHistory(strings.Join(event.Check.History, ", ")) + "\n")...)
+	result = append(result, (bold("OCCURRENCES    ") + strconv.Itoa(event.Occurrences) + "\n")...)
+	result = append(result, (bold("ACTION         ") + event.Action + "\n")...)
 
 	return string(result)
 }
 
-func DeleteEventsClientCheck(client string, check string) string {
-	_, status := deleteAPI("/events/" + client + "/" + check)
-	checkStatus(status)
+func DeleteEventsClientCheck(api *sensu.API, client string, check string) string {
+	err := api.DeleteEventsClientCheck(client, check)
+	checkError(err)
 
-	return httpStatus(status) + "\n"
+	return "Accepted\n"
 }

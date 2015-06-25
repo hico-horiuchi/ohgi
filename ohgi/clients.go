@@ -1,52 +1,42 @@
 package ohgi
 
 import (
-	"encoding/json"
-	"fmt"
 	"regexp"
 	"strings"
+
+	"../sensu"
 )
 
-type clientStruct struct {
-	Name          string   `json:"name"`
-	Address       string   `json:"address"`
-	Subscriptions []string `json:"subscriptions"`
-	Timestamp     int64
-}
+func GetClients(api *sensu.API, limit int, offset int) string {
+	var line string
 
-func GetClients(limit int, offset int) string {
-	var clients []clientStruct
-	var result []byte
+	clients, err := api.GetClients(limit, offset)
+	checkError(err)
 
-	contents, status := getAPI(fmt.Sprintf("/clients?limit=%d&offset=%d", limit, offset))
-	checkStatus(status)
-
-	json.Unmarshal(contents, &clients)
 	if len(clients) == 0 {
 		return "No clients\n"
 	}
 
-	result = append(result, bold("NAME                                    ADDRESS                                 TIMESTAMP\n")...)
-	for _, c := range clients {
-		line := fillSpace(c.Name, 40) + fillSpace(c.Address, 40) + utoa(c.Timestamp) + "\n"
+	result := []byte(bold("NAME                                    ADDRESS                                 TIMESTAMP\n"))
+	for _, client := range clients {
+		line = fillSpace(client.Name, 40) + fillSpace(client.Address, 40) + utoa(client.Timestamp) + "\n"
 		result = append(result, line...)
 	}
 
 	return string(result)
 }
 
-func GetClientsWildcard(pattern string) string {
-	var clients []clientStruct
-	var result []byte
+func GetClientsWildcard(api *sensu.API, pattern string) string {
+	var match []string
 	var matches []int
+	var line string
+
+	clients, err := api.GetClients(-1, -1)
+	checkError(err)
+
 	re := regexp.MustCompile("^" + strings.Replace(pattern, "*", ".*", -1) + "$")
-
-	contents, status := getAPI("/clients")
-	checkStatus(status)
-
-	json.Unmarshal(contents, &clients)
-	for i, c := range clients {
-		match := re.FindStringSubmatch(c.Name)
+	for i, client := range clients {
+		match = re.FindStringSubmatch(client.Name)
 		if len(match) > 0 {
 			matches = append(matches, i)
 		}
@@ -56,53 +46,41 @@ func GetClientsWildcard(pattern string) string {
 		return "No clients\n"
 	}
 
-	result = append(result, bold("NAME                                    ADDRESS                                 TIMESTAMP\n")...)
+	result := []byte(bold("NAME                                    ADDRESS                                 TIMESTAMP\n"))
 	for _, i := range matches {
-		c := clients[i]
-		line := fillSpace(c.Name, 40) + fillSpace(c.Address, 40) + utoa(c.Timestamp) + "\n"
+		client := clients[i]
+		line = fillSpace(client.Name, 40) + fillSpace(client.Address, 40) + utoa(client.Timestamp) + "\n"
 		result = append(result, line...)
 	}
 
 	return string(result)
 }
 
-func GetClientsClient(client string) string {
-	var c clientStruct
+func GetClientsClient(api *sensu.API, name string) string {
 	var result []byte
 
-	contents, status := getAPI("/clients/" + client)
-	checkStatus(status)
+	client, err := api.GetClientsClient(name)
+	checkError(err)
 
-	json.Unmarshal(contents, &c)
-
-	result = append(result, (bold("NAME           ") + c.Name + "\n")...)
-	result = append(result, (bold("ADDRESS        ") + c.Address + "\n")...)
-	result = append(result, (bold("SUBSCRIPTIONS  ") + strings.Join(c.Subscriptions, ", ") + "\n")...)
-	result = append(result, (bold("TIMESTAMP      ") + utoa(c.Timestamp) + "\n")...)
+	result = append(result, (bold("NAME           ") + client.Name + "\n")...)
+	result = append(result, (bold("ADDRESS        ") + client.Address + "\n")...)
+	result = append(result, (bold("SUBSCRIPTIONS  ") + strings.Join(client.Subscriptions, ", ") + "\n")...)
+	result = append(result, (bold("TIMESTAMP      ") + utoa(client.Timestamp) + "\n")...)
+	result = append(result, (bold("VERSION        ") + client.Version + "\n")...)
 
 	return string(result)
 }
 
-func PostClients(name string, address string, subscriptions string) string {
-	c := clientStruct{
-		Name:          name,
-		Address:       address,
-		Subscriptions: strings.Split(subscriptions, ","),
-	}
-
-	body, err := json.Marshal(c)
+func PostClients(api *sensu.API, name string, address string, subscriptions []string) string {
+	err := api.PostClients(name, address, subscriptions)
 	checkError(err)
 
-	payload := strings.NewReader(string(body))
-	_, status := postAPI("/clients", payload)
-	checkStatus(status)
-
-	return httpStatus(status) + "\n"
+	return "Created\n"
 }
 
-func DeleteClientsClient(client string) string {
-	_, status := deleteAPI("/clients/" + client)
-	checkStatus(status)
+func DeleteClientsClient(api *sensu.API, name string) string {
+	err := api.DeleteClientsClient(name)
+	checkError(err)
 
-	return httpStatus(status) + "\n"
+	return "Accepted\n"
 }
