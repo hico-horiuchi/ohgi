@@ -64,8 +64,8 @@ func PostSilence(api *sensu.API, client string, check string, expiration string,
 
 	silence := silenceStruct{
 		StashStruct: sensu.StashStruct{
-			Path:   path,
 			Expire: stoe(expiration),
+			Path:   path,
 		},
 		Content: contentStruct{
 			Timestamp: float64(time.Now().Unix()),

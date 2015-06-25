@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"regexp"
 	"strings"
 )
 
 type StashStruct struct {
-	Path   string `json:"path"`
 	Expire int64  `json:"expire"`
+	Path   string `json:"path"`
 }
 
 // Returns a list of stashes.
@@ -36,9 +35,7 @@ func (api API) PostStashes(stash interface{}) error {
 	if err != nil {
 		return err
 	}
-
-	re := regexp.MustCompile(`"expire":-1[,|\}]`)
-	payload := strings.NewReader(string(re.ReplaceAll(body, []byte{})))
+	payload := strings.NewReader(strings.Replace(string(body), `"expire":-1,`, "", -1))
 
 	response, err := api.post("/stashes", payload)
 	if err != nil {
