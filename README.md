@@ -7,6 +7,11 @@
   - [Golang](https://golang.org/) >= 1
   - [Sensu](http://sensuapp.org/) >= 0.13
 
+#### Documents
+
+  - [github.com/hico-horiuchi/ohgi/ohgi](http://godoc.org/github.com/hico-horiuchi/ohgi/ohgi)
+  - [github.com/hico-horiuchi/ohgi/sensu](http://godoc.org/github.com/hico-horiuchi/ohgi/sensu)
+
 #### Installation
 
     $ git clone git://github.com/hico-horiuchi/ohgi.git
