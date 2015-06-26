@@ -12,11 +12,11 @@ func GetClientsHistory(api *sensu.API, client string) string {
 		return "No histories\n"
 	}
 
-	result := []byte(bold("CHECK                         HISTORY                                         TIMESTAMP\n"))
+	print := []byte(bold("CHECK                         HISTORY                                         TIMESTAMP\n"))
 	for _, history := range histories {
 		line = fillSpace(history.Check, 30) + paintHistory(fillSpace(stoa(history.History, ", "), 48)) + utoa(history.LastExecution) + "\n"
-		result = append(result, line...)
+		print = append(print, line...)
 	}
 
-	return string(result)
+	return string(print)
 }

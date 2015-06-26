@@ -5,7 +5,7 @@
 #### Requirements
 
   - [Golang](https://golang.org/) >= 1
-  - [Sensu](http://sensuapp.org/) >= 0.13
+  - [Sensu](http://sensuapp.org/) >= 0.19
 
 #### Documents
 
@@ -60,6 +60,7 @@ If a datacenter is not specified, use first of `datacenters`.
       checks      List locally defined checks and request executions
       request     Issues a check execution request
       events      List and resolve current events
+      results     List current check results
       resolve     Resolves an event
       silence     Create, list, and delete silence stashes
       health      Check the status of the API's transport & Redis connections, and query the transport's status

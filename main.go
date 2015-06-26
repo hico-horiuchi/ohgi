@@ -157,6 +157,22 @@ func main() {
 		},
 	})
 
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "results [client] [check]",
+		Short: "List current check results",
+		Long:  "results                   Returns a list of current check results for all clients\nresults [client]          Returns a list of current check results for a given client\nresults [client] [check]  Returns a check result for a given client & check name",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 0:
+				fmt.Print(ohgi.GetResults(sensu.DefaultAPI))
+			case 1:
+				fmt.Print(ohgi.GetResultsClient(sensu.DefaultAPI, args[0]))
+			case 2:
+				fmt.Print(ohgi.GetResultsClientCheck(sensu.DefaultAPI, args[0], args[1]))
+			}
+		},
+	})
+
 	silenceCmd := &cobra.Command{
 		Use:   "silence [client] [check]",
 		Short: "Create, list, and delete silence stashes",

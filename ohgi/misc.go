@@ -23,13 +23,13 @@ func utoa(timestamp int64) string {
 }
 
 func stoa(arr []int, sep string) string {
-	var result []byte
+	var print []byte
 
 	for _, i := range arr {
-		result = append(result, (strconv.Itoa(i) + sep)...)
+		print = append(print, (strconv.Itoa(i) + sep)...)
 	}
 
-	return string(result)
+	return string(print)
 }
 
 func stoe(expiration string) int64 {

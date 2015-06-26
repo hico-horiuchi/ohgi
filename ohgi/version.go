@@ -28,19 +28,19 @@ func verCheck(version string) <-chan *latest.CheckResponse {
 }
 
 func Version(version string) string {
-	var result []byte
-	result = append(result, fmt.Sprintf("ohgi version %s\n", version)...)
+	var print []byte
+	print = append(print, fmt.Sprintf("ohgi version %s\n", version)...)
 	verCheckCh := verCheck(version)
 
 	for {
 		select {
 		case res := <-verCheckCh:
 			if res != nil && res.Outdated {
-				result = append(result, fmt.Sprintf("Latest version of ohgi is %s, please update it\n", res.Current)...)
+				print = append(print, fmt.Sprintf("Latest version of ohgi is %s, please update it\n", res.Current)...)
 			}
-			return string(result)
+			return string(print)
 		case <-time.After(TIMEOUT_SEC * time.Second):
-			return string(result)
+			return string(print)
 		}
 	}
 }

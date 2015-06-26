@@ -17,13 +17,13 @@ func GetClients(api *sensu.API, limit int, offset int) string {
 		return "No clients\n"
 	}
 
-	result := []byte(bold("NAME                                    ADDRESS                                 TIMESTAMP\n"))
+	print := []byte(bold("NAME                                    ADDRESS                                 TIMESTAMP\n"))
 	for _, client := range clients {
 		line = fillSpace(client.Name, 40) + fillSpace(client.Address, 40) + utoa(client.Timestamp) + "\n"
-		result = append(result, line...)
+		print = append(print, line...)
 	}
 
-	return string(result)
+	return string(print)
 }
 
 func GetClientsWildcard(api *sensu.API, pattern string) string {
@@ -46,29 +46,29 @@ func GetClientsWildcard(api *sensu.API, pattern string) string {
 		return "No clients\n"
 	}
 
-	result := []byte(bold("NAME                                    ADDRESS                                 TIMESTAMP\n"))
+	print := []byte(bold("NAME                                    ADDRESS                                 TIMESTAMP\n"))
 	for _, i := range matches {
 		client := clients[i]
 		line = fillSpace(client.Name, 40) + fillSpace(client.Address, 40) + utoa(client.Timestamp) + "\n"
-		result = append(result, line...)
+		print = append(print, line...)
 	}
 
-	return string(result)
+	return string(print)
 }
 
 func GetClientsClient(api *sensu.API, name string) string {
-	var result []byte
+	var print []byte
 
 	client, err := api.GetClientsClient(name)
 	checkError(err)
 
-	result = append(result, (bold("NAME           ") + client.Name + "\n")...)
-	result = append(result, (bold("ADDRESS        ") + client.Address + "\n")...)
-	result = append(result, (bold("SUBSCRIPTIONS  ") + strings.Join(client.Subscriptions, ", ") + "\n")...)
-	result = append(result, (bold("TIMESTAMP      ") + utoa(client.Timestamp) + "\n")...)
-	result = append(result, (bold("VERSION        ") + client.Version + "\n")...)
+	print = append(print, (bold("NAME           ") + client.Name + "\n")...)
+	print = append(print, (bold("ADDRESS        ") + client.Address + "\n")...)
+	print = append(print, (bold("SUBSCRIPTIONS  ") + strings.Join(client.Subscriptions, ", ") + "\n")...)
+	print = append(print, (bold("TIMESTAMP      ") + utoa(client.Timestamp) + "\n")...)
+	print = append(print, (bold("VERSION        ") + client.Version + "\n")...)
 
-	return string(result)
+	return string(print)
 }
 
 func PostClients(api *sensu.API, name string, address string, subscriptions []string) string {

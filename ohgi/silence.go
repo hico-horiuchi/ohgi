@@ -31,7 +31,7 @@ func GetSilence(api *sensu.API) string {
 		return "No silence stashes\n"
 	}
 
-	result := []byte(bold("CLIENT                                  CHECK                         REASON                        EXPIRATION\n"))
+	print := []byte(bold("CLIENT                                  CHECK                         REASON                        EXPIRATION\n"))
 	for _, silence := range silences {
 		path = strings.Split(silence.Path, "/")
 		if path[0] != "silence" {
@@ -47,10 +47,10 @@ func GetSilence(api *sensu.API) string {
 		}
 
 		line = fillSpace(path[1], 40) + fillSpace(path[2], 30) + fillSpace(silence.Content.Reason, 30) + expire + "\n"
-		result = append(result, line...)
+		print = append(print, line...)
 	}
 
-	return string(result)
+	return string(print)
 }
 
 func PostSilence(api *sensu.API, client string, check string, expiration string, reason string) string {
