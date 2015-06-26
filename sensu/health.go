@@ -11,7 +11,7 @@ func (api API) GetHealth(consumers int, messages int) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 204 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil

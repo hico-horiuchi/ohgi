@@ -33,7 +33,7 @@ func (api API) GetInfo() (InfoStruct, error) {
 	if err != nil {
 		return info, err
 	} else if response.StatusCode != 200 {
-		return info, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return info, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &info)

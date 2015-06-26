@@ -21,7 +21,7 @@ func (api API) GetEvents() ([]EventStruct, error) {
 	if err != nil {
 		return events, err
 	} else if response.StatusCode != 200 {
-		return events, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return events, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &events)
@@ -40,7 +40,7 @@ func (api API) GetEventsClient(client string) ([]EventStruct, error) {
 	if err != nil {
 		return events, err
 	} else if response.StatusCode != 200 {
-		return events, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return events, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &events)
@@ -59,7 +59,7 @@ func (api API) GetEventsClientCheck(client string, check string) (EventStruct, e
 	if err != nil {
 		return event, err
 	} else if response.StatusCode != 200 {
-		return event, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return event, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &event)
@@ -76,7 +76,7 @@ func (api API) DeleteEventsClientCheck(client string, check string) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 202 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil

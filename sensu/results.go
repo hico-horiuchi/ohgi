@@ -18,7 +18,7 @@ func (api API) GetResults() ([]ResultStruct, error) {
 	if err != nil {
 		return results, err
 	} else if response.StatusCode != 200 {
-		return results, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return results, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &results)
@@ -37,7 +37,7 @@ func (api API) GetResultsClient(client string) ([]ResultStruct, error) {
 	if err != nil {
 		return results, err
 	} else if response.StatusCode != 200 {
-		return results, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return results, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &results)
@@ -56,7 +56,7 @@ func (api API) GetResultsClientCheck(client string, check string) (ResultStruct,
 	if err != nil {
 		return result, err
 	} else if response.StatusCode != 200 {
-		return result, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return result, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &result)

@@ -1,6 +1,6 @@
 package sensu
 
-func StatusCodeToString(status int) string {
+func statusCodeToString(status int) string {
 	var str string
 
 	switch status {

@@ -18,7 +18,7 @@ func (api API) GetStashes(stashes interface{}, limit int, offset int) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 200 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), stashes)
@@ -41,7 +41,7 @@ func (api API) PostStashes(stash interface{}) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 201 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil
@@ -59,7 +59,7 @@ func (api API) PostStashesPath(path string, content interface{}) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 201 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil
@@ -71,7 +71,7 @@ func (api API) GetStashesPath(path string, content interface{}) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 200 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), content)
@@ -88,7 +88,7 @@ func (api API) DeleteStashesPath(path string) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 204 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil

@@ -27,7 +27,7 @@ func (api API) GetChecks() ([]CheckStruct, error) {
 	if err != nil {
 		return checks, err
 	} else if response.StatusCode != 200 {
-		return checks, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return checks, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &checks)
@@ -46,7 +46,7 @@ func (api API) GetChecksCheck(name string) (CheckStruct, error) {
 	if err != nil {
 		return check, err
 	} else if response.StatusCode != 200 {
-		return check, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return check, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &check)

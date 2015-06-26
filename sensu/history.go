@@ -20,7 +20,7 @@ func (api API) GetClientsHistory(client string) ([]historyStruct, error) {
 	if err != nil {
 		return histories, err
 	} else if response.StatusCode != 200 {
-		return histories, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return histories, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &histories)

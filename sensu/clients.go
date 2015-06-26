@@ -23,7 +23,7 @@ func (api API) GetClients(limit int, offset int) ([]ClientStruct, error) {
 	if err != nil {
 		return clients, err
 	} else if response.StatusCode != 200 {
-		return clients, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return clients, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &clients)
@@ -42,7 +42,7 @@ func (api API) GetClientsClient(name string) (ClientStruct, error) {
 	if err != nil {
 		return client, err
 	} else if response.StatusCode != 200 {
-		return client, errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return client, errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	err = json.Unmarshal([]byte(response.Body), &client)
@@ -71,7 +71,7 @@ func (api API) PostClients(name string, address string, subscriptions []string) 
 	if err != nil {
 		return err
 	} else if response.StatusCode != 201 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil
@@ -83,7 +83,7 @@ func (api API) DeleteClientsClient(name string) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 202 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil

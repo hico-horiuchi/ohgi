@@ -28,7 +28,7 @@ func (api API) PostRequest(check string, subscribers []string) error {
 	if err != nil {
 		return err
 	} else if response.StatusCode != 202 {
-		return errors.New("sensu: " + StatusCodeToString(response.StatusCode))
+		return errors.New("sensu: " + statusCodeToString(response.StatusCode))
 	}
 
 	return nil
