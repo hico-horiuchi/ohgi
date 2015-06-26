@@ -1,6 +1,7 @@
 package ohgi
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -19,6 +20,36 @@ func GetResults(api *sensu.API) string {
 
 	print := []byte(bold("  CLIENT                                  CHECK                         EXECUTED\n"))
 	for _, result := range results {
+		line = indicateStatus(result.Check.Status) + fillSpace(result.Client, 40) + fillSpace(result.Check.Name, 30) + utoa(result.Check.Executed) + "\n"
+		print = append(print, line...)
+	}
+
+	return string(print)
+}
+
+func GetResultsWildcard(api *sensu.API, pattern string) string {
+	var match []string
+	var matches []int
+	var line string
+
+	results, err := api.GetResults()
+	checkError(err)
+
+	re := regexp.MustCompile("^" + strings.Replace(pattern, "*", ".*", -1) + "$")
+	for i, result := range results {
+		match = re.FindStringSubmatch(result.Client)
+		if len(match) > 0 {
+			matches = append(matches, i)
+		}
+	}
+
+	if len(matches) == 0 {
+		return "No current check results that match " + pattern + "\n"
+	}
+
+	print := []byte(bold("  CLIENT                                  CHECK                         EXECUTED\n"))
+	for _, i := range matches {
+		result := results[i]
 		line = indicateStatus(result.Check.Status) + fillSpace(result.Client, 40) + fillSpace(result.Check.Name, 30) + utoa(result.Check.Executed) + "\n"
 		print = append(print, line...)
 	}

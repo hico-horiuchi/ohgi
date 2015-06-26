@@ -44,7 +44,7 @@ func GetChecksWildcard(api *sensu.API, pattern string) string {
 	}
 
 	if len(matches) == 0 {
-		return "No checks\n"
+		return "No checks that match " + pattern + "\n"
 	}
 
 	print := []byte(bold("NAME                          COMMAND                                                     INTERVAL\n"))

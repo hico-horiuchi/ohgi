@@ -43,7 +43,7 @@ func GetClientsWildcard(api *sensu.API, pattern string) string {
 	}
 
 	if len(matches) == 0 {
-		return "No clients\n"
+		return "No clients that match " + pattern + "\n"
 	}
 
 	print := []byte(bold("NAME                                    ADDRESS                                 TIMESTAMP\n"))

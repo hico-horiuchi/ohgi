@@ -1,6 +1,7 @@
 package ohgi
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -19,6 +20,36 @@ func GetEvents(api *sensu.API) string {
 
 	print := []byte(bold("  CLIENT                                  CHECK                         #         EXECUTED\n"))
 	for _, event := range events {
+		line = indicateStatus(event.Check.Status) + fillSpace(event.Client.Name, 40) + fillSpace(event.Check.Name, 30) + fillSpace(strconv.Itoa(event.Occurrences), 10) + utoa(event.Check.Executed) + "\n"
+		print = append(print, line...)
+	}
+
+	return string(print)
+}
+
+func GetEventsWildcard(api *sensu.API, pattern string) string {
+	var match []string
+	var matches []int
+	var line string
+
+	events, err := api.GetEvents()
+	checkError(err)
+
+	re := regexp.MustCompile("^" + strings.Replace(pattern, "*", ".*", -1) + "$")
+	for i, event := range events {
+		match = re.FindStringSubmatch(event.Client.Name)
+		if len(match) > 0 {
+			matches = append(matches, i)
+		}
+	}
+
+	if len(matches) == 0 {
+		return "No current events that match " + pattern + "\n"
+	}
+
+	print := []byte(bold("  CLIENT                                  CHECK                         #         EXECUTED\n"))
+	for _, i := range matches {
+		event := events[i]
 		line = indicateStatus(event.Check.Status) + fillSpace(event.Client.Name, 40) + fillSpace(event.Check.Name, 30) + fillSpace(strconv.Itoa(event.Occurrences), 10) + utoa(event.Check.Executed) + "\n"
 		print = append(print, line...)
 	}

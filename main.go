@@ -132,7 +132,11 @@ func main() {
 			case 0:
 				fmt.Print(ohgi.GetEvents(sensu.DefaultAPI))
 			case 1:
-				fmt.Print(ohgi.GetEventsClient(sensu.DefaultAPI, args[0]))
+				if strings.Contains(args[0], "*") {
+					fmt.Print(ohgi.GetEventsWildcard(sensu.DefaultAPI, args[0]))
+				} else {
+					fmt.Print(ohgi.GetEventsClient(sensu.DefaultAPI, args[0]))
+				}
 			case 2:
 				if delete {
 					fmt.Print(ohgi.DeleteEventsClientCheck(sensu.DefaultAPI, args[0], args[1]))
@@ -166,7 +170,11 @@ func main() {
 			case 0:
 				fmt.Print(ohgi.GetResults(sensu.DefaultAPI))
 			case 1:
-				fmt.Print(ohgi.GetResultsClient(sensu.DefaultAPI, args[0]))
+				if strings.Contains(args[0], "*") {
+					fmt.Print(ohgi.GetResultsWildcard(sensu.DefaultAPI, args[0]))
+				} else {
+					fmt.Print(ohgi.GetResultsClient(sensu.DefaultAPI, args[0]))
+				}
 			case 2:
 				fmt.Print(ohgi.GetResultsClientCheck(sensu.DefaultAPI, args[0], args[1]))
 			}
