@@ -82,7 +82,7 @@ func bold(str string) string {
 
 func indicateStatus(status int) string {
 	if !EscapeSequence {
-		return "  "
+		return strconv.Itoa(status) + " "
 	}
 
 	switch status {
@@ -101,25 +101,25 @@ func paintStatus(status int) string {
 	if !EscapeSequence {
 		switch status {
 		case 0:
-			return "OK "
+			return "OK"
 		case 1:
-			return "WARNING "
+			return "WARNING"
 		case 2:
-			return "CRITICAL "
+			return "CRITICAL"
 		default:
-			return "UNKNOWN "
+			return "UNKNOWN"
 		}
 	}
 
 	switch status {
 	case 0:
-		return "\x1b[32mOK\x1b[0m "
+		return "\x1b[32mOK\x1b[0m"
 	case 1:
-		return "\x1b[33mWARNING\x1b[0m "
+		return "\x1b[33mWARNING\x1b[0m"
 	case 2:
-		return "\x1b[31mCRITICAL\x1b[0m "
+		return "\x1b[31mCRITICAL\x1b[0m"
 	default:
-		return "\x1b[37mUNKNOWN\x1b[0m "
+		return "\x1b[37mUNKNOWN\x1b[0m"
 	}
 }
 
