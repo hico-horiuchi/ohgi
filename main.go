@@ -75,6 +75,8 @@ func main() {
 				fmt.Print(ohgi.PostClients(sensu.DefaultAPI, args[0], args[1], []string{}))
 			case 3:
 				fmt.Print(ohgi.PostClients(sensu.DefaultAPI, args[0], args[1], strings.Split(args[2], ",")))
+			default:
+				cmd.Help()
 			}
 		},
 	})
@@ -87,6 +89,8 @@ func main() {
 			switch len(args) {
 			case 1:
 				fmt.Print(ohgi.GetClientsHistory(sensu.DefaultAPI, args[0]))
+			default:
+				cmd.Help()
 			}
 		},
 	})
@@ -119,6 +123,8 @@ func main() {
 				fmt.Print(ohgi.PostRequest(sensu.DefaultAPI, args[0], []string{}))
 			case 2:
 				fmt.Print(ohgi.PostRequest(sensu.DefaultAPI, args[0], strings.Split(args[1], ",")))
+			default:
+				cmd.Help()
 			}
 		},
 	})
@@ -157,6 +163,8 @@ func main() {
 			switch len(args) {
 			case 2:
 				fmt.Print(ohgi.PostResolve(sensu.DefaultAPI, args[0], args[1]))
+			default:
+				cmd.Help()
 			}
 		},
 	})
