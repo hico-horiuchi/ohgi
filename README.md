@@ -61,6 +61,7 @@ If a datacenter is not specified, use first of `datacenters`.
       request     Issues a check execution request
       events      List and resolve current events
       results     List current check results
+      aggregates  List and delete check aggregates
       resolve     Resolves an event
       silence     Create, list, and delete silence stashes
       health      Check the status of the API's transport & Redis connections, and query the transport's status
@@ -70,9 +71,9 @@ If a datacenter is not specified, use first of `datacenters`.
     
     Flags:
       -x, --datacenter="": Specify a datacenter
-      -h, --help=false: help for ohgi
+      -h, --help[=false]: help for ohgi
     
-    Use "ohgi help [command]" for more information about a command.
+    Use "ohgi [command] --help" for more information about a command.
 
 #### License
 
