@@ -80,62 +80,70 @@ func bold(str string) string {
 	return "\x1b[1m" + str + "\x1b[0m"
 }
 
+func frontColor(str string, status int) string {
+	if !EscapeSequence {
+		return str
+	}
+
+	switch status {
+	case 0:
+		return "\x1b[32m" + str + "\x1b[0m"
+	case 1:
+		return "\x1b[33m" + str + "\x1b[0m"
+	case 2:
+		return "\x1b[31m" + str + "\x1b[0m"
+	default:
+		return "\x1b[37m" + str + "\x1b[0m"
+	}
+}
+
+func backColor(str string, status int) string {
+	if !EscapeSequence {
+		return str
+	}
+
+	switch status {
+	case 0:
+		return "\x1b[42m" + str + "\x1b[0m"
+	case 1:
+		return "\x1b[43m" + str + "\x1b[0m"
+	case 2:
+		return "\x1b[41m" + str + "\x1b[0m"
+	default:
+		return "\x1b[47m" + str + "\x1b[0m"
+	}
+}
+
 func indicateStatus(status int) string {
 	if !EscapeSequence {
 		return strconv.Itoa(status) + " "
 	}
 
-	switch status {
-	case 0:
-		return "\x1b[42m \x1b[0m "
-	case 1:
-		return "\x1b[43m \x1b[0m "
-	case 2:
-		return "\x1b[41m \x1b[0m "
-	default:
-		return "\x1b[47m \x1b[0m "
-	}
+	return backColor(" ", status) + " "
 }
 
 func paintStatus(status int) string {
-	if !EscapeSequence {
-		switch status {
-		case 0:
-			return "OK"
-		case 1:
-			return "WARNING"
-		case 2:
-			return "CRITICAL"
-		default:
-			return "UNKNOWN"
-		}
-	}
-
 	switch status {
 	case 0:
-		return "\x1b[32mOK\x1b[0m"
+		return frontColor("OK", 0)
 	case 1:
-		return "\x1b[33mWARNING\x1b[0m"
+		return frontColor("WARNIG", 1)
 	case 2:
-		return "\x1b[31mCRITICAL\x1b[0m"
+		return frontColor("CRITICAL", 2)
 	default:
-		return "\x1b[37mUNKNOWN\x1b[0m"
+		return frontColor("UNKNOWN", 3)
 	}
 }
 
 func paintHistory(history string) string {
 	var format *regexp.Regexp
 
-	if !EscapeSequence {
-		return history
-	}
-
 	format = regexp.MustCompile("(^| )(0)(|,)")
-	history = format.ReplaceAllString(history, "\x1b[32m$1$2$3\x1b[0m")
+	history = format.ReplaceAllString(history, frontColor("$1$2$3", 0))
 	format = regexp.MustCompile("(^| )(1)(|,)")
-	history = format.ReplaceAllString(history, "\x1b[33m$1$2$3\x1b[0m")
+	history = format.ReplaceAllString(history, frontColor("$1$2$3", 1))
 	format = regexp.MustCompile("(^| )(2)(|,)")
-	history = format.ReplaceAllString(history, "\x1b[31m$1$2$3\x1b[0m")
+	history = format.ReplaceAllString(history, frontColor("$1$2$3", 2))
 
 	return history
 }

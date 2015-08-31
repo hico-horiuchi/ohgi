@@ -15,12 +15,14 @@ var version string
 
 func main() {
 	var (
+		age        int
 		datacenter string
 		limit      int
 		offset     int
 		delete     bool
 		expiration string
 		reason     string
+		results    bool
 		consumers  int
 		messages   int
 	)
@@ -188,6 +190,32 @@ func main() {
 			}
 		},
 	})
+
+	aggregatesCmd := &cobra.Command{
+		Use:   "aggregates [check] [issued]",
+		Short: "List and delete check aggregates",
+		Long:  "aggregates                   Returns the list of aggregates\naggregates [check]           Returns the list of aggregates for a given check\naggregates [check] [issued]  Returns an aggregate",
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 0:
+				fmt.Print(ohgi.GetAggregates(sensu.DefaultAPI, limit, offset))
+			case 1:
+				if delete {
+					fmt.Print(ohgi.DeleteAggregatesCheck(sensu.DefaultAPI, args[0]))
+				} else {
+					fmt.Print(ohgi.GetAggregatesCheck(sensu.DefaultAPI, args[0], age))
+				}
+			case 2:
+				fmt.Print(ohgi.GetAggregatesCheckIssued(sensu.DefaultAPI, args[0], args[1], results))
+			}
+		},
+	}
+	aggregatesCmd.Flags().IntVarP(&limit, "limit", "l", -1, "The number of aggregates to return")
+	aggregatesCmd.Flags().IntVarP(&offset, "offset", "o", -1, "The number of aggregates to offset before returning items")
+	aggregatesCmd.Flags().IntVarP(&age, "age", "a", -1, "The number of seconds old an aggregate must be to be listed")
+	aggregatesCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Deletes all aggregates for a check")
+	aggregatesCmd.Flags().BoolVarP(&results, "results", "r", false, "Return the raw result data")
+	rootCmd.AddCommand(aggregatesCmd)
 
 	silenceCmd := &cobra.Command{
 		Use:   "silence [client] [check]",
