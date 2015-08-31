@@ -1,5 +1,5 @@
 VERSION     := 0.3.2
-GO_BUILDOPT := -ldflags '-s -w -X main.version $(VERSION)'
+GO_BUILDOPT := -ldflags '-s -w -X main.version=$(VERSION)'
 
 gom:
 	go get github.com/mattn/gom
