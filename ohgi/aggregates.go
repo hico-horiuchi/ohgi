@@ -55,6 +55,16 @@ func DeleteAggregatesCheck(api *sensu.API, check string) string {
 func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, results bool) string {
 	var print []byte
 
+	if issued == "latest" {
+		issues, err := api.GetAggregatesCheck(check, -1)
+		checkError(err)
+
+		if len(issues) == 0 {
+			return "No aggregates\n"
+		}
+		issued = strconv.FormatInt(issues[0], 10)
+	}
+
 	i, err := strconv.ParseInt(issued, 10, 64)
 	checkError(err)
 
