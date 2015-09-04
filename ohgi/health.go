@@ -1,6 +1,6 @@
 package ohgi
 
-import "../sensu"
+import "github.com/hico-horiuchi/ohgi/sensu"
 
 func GetHealth(api *sensu.API, consumers int, messages int) string {
 	err := api.GetHealth(consumers, messages)

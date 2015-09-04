@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"../sensu"
+	"github.com/hico-horiuchi/ohgi/sensu"
 )
 
 func GetClients(api *sensu.API, limit int, offset int) string {

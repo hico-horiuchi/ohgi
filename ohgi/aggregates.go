@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"../sensu"
+	"github.com/hico-horiuchi/ohgi/sensu"
 )
 
 func GetAggregates(api *sensu.API, limit int, offset int) string {

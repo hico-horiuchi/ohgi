@@ -23,8 +23,16 @@ release: fmt
 clean:
 	rm -f bin/ohgi*
 
+link:
+	mkdir -p $(GOPATH)/src/github.com/hico-horiuchi
+	ln -s $(CURDIR) $(GOPATH)/src/github.com/hico-horiuchi/ohgi
+
+unlink:
+	rm $(GOPATH)/src/github.com/hico-horiuchi/ohgi
+	rmdir $(GOPATH)/src/github.com/hico-horiuchi
+
 install: build
 	cp bin/ohgi /usr/local/bin/
 
-uninstall: clean
+uninstall: clean unlink
 	rm -f /usr/local/bin/ohgi

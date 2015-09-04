@@ -3,7 +3,7 @@ package ohgi
 import (
 	"strconv"
 
-	"../sensu"
+	"github.com/hico-horiuchi/ohgi/sensu"
 )
 
 func GetInfo(api *sensu.API) string {

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"../sensu"
+	"github.com/hico-horiuchi/ohgi/sensu"
 )
 
 func GetEvents(api *sensu.API) string {

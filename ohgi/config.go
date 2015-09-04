@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"../sensu"
+	"github.com/hico-horiuchi/ohgi/sensu"
 )
 
 type configStruct struct {

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"../sensu"
+	"github.com/hico-horiuchi/ohgi/sensu"
 )
 
 type silenceStruct struct {

@@ -16,7 +16,7 @@
 
     $ git clone git://github.com/hico-horiuchi/ohgi.git
     $ cd ohgi
-    $ make gom
+    $ make gom link
     $ sudo make install
 
 #### Configuration

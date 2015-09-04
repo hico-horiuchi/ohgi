@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"../sensu"
+	"github.com/hico-horiuchi/ohgi/sensu"
 )
 
 func GetResults(api *sensu.API) string {

@@ -1,6 +1,6 @@
 package ohgi
 
-import "../sensu"
+import "github.com/hico-horiuchi/ohgi/sensu"
 
 func GetClientsHistory(api *sensu.API, client string) string {
 	var line string

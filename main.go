@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"./ohgi"
-	"./sensu"
+	"github.com/hico-horiuchi/ohgi/ohgi"
+	"github.com/hico-horiuchi/ohgi/sensu"
 	isatty "github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
