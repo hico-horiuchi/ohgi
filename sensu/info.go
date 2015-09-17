@@ -22,7 +22,7 @@ type InfoStruct struct {
 	}
 	Redis struct {
 		Connected bool `json:"connected"`
-	} `json: "redis"`
+	} `json:"redis"`
 }
 
 // Returns information on the API.
