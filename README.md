@@ -1,6 +1,6 @@
 ## ohgi v0.4.1
 
-![image.png](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.png)
+![image.gif](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.gif)
 
 #### Requirements
 
