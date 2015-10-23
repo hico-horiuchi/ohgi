@@ -47,7 +47,7 @@ If a datacenter is not specified, use first of `datacenters`.
 
 #### Usage
 
-    Sensu command-line tool by golang
+    Sensu command-line tool by Golang
     https://github.com/hico-horiuchi/ohgi
     
     Usage:

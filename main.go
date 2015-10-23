@@ -33,8 +33,8 @@ func main() {
 
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
-		Short: "Sensu command-line tool by golang",
-		Long:  "Sensu command-line tool by golang\nhttps://github.com/hico-horiuchi/ohgi",
+		Short: "Sensu command-line tool by Golang",
+		Long:  "Sensu command-line tool by Golang\nhttps://github.com/hico-horiuchi/ohgi",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			sensu.DefaultAPI = ohgi.LoadConfig(datacenter)
 		},
