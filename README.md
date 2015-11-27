@@ -24,20 +24,17 @@
 `~/.ohgi.json`
 
     {
-      "datacenters": [
-        {
-          "name": "server-1",       // Required
-          "host": "192.168.11.10",  // Required
-          "port": 4567,             // Required
-          "user": "sensu-1",        // Optional
-          "password": "password"    // Optional
-        },
-        {
-          "name": "server-2",
-          "host": "192.168.11.20",
-          "port": 4567
-        }
-      ]
+      "datacenters": [{
+        "name": "server-1",       // Required
+        "host": "192.168.11.10",  // Required
+        "port": 4567,             // Required
+        "user": "sensu-1",        // Optional
+        "password": "password"    // Optional
+      }, {
+        "name": "server-2",
+        "host": "192.168.11.20",
+        "port": 4567
+      }]
     }
 
 Specify a datacenter by `-x`(`--datacenter`) option as below.  
