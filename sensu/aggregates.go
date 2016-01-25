@@ -21,7 +21,7 @@ type AggregateStruct struct {
 		Client string `json:"client"`
 		Output string `json:"output"`
 		Status int    `json:"status"`
-	}
+	} `json:"results"`
 }
 
 // Returns the list of aggregates.
