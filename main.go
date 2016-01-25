@@ -44,7 +44,7 @@ func main() {
 	clientsCmd := &cobra.Command{
 		Use:   "clients [client]",
 		Short: "List and delete client(s) information",
-		Long:  "clients           Returns the list of clients\nclients [client]  Returns a client",
+		Long:  "clients           Returns a list of clients\nclients [client]  Returns a client",
 		Run: func(cmd *cobra.Command, args []string) {
 			switch len(args) {
 			case 0:
