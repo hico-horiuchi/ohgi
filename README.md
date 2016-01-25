@@ -1,4 +1,4 @@
-## ohgi v0.4.1
+## ohgi v0.4.2
 
 ![image.gif](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.gif)
 
