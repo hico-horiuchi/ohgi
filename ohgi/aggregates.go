@@ -52,7 +52,7 @@ func DeleteAggregatesCheck(api *sensu.API, check string) string {
 	return "No Content\n"
 }
 
-func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, results bool) string {
+func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, summarize string, results bool) string {
 	var print []byte
 
 	if issued == "latest" {
@@ -68,8 +68,17 @@ func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, resul
 	i, err := strconv.ParseInt(issued, 10, 64)
 	checkError(err)
 
-	aggregate, err := api.GetAggregatesCheckIssued(check, i, results)
+	aggregate, err := api.GetAggregatesCheckIssued(check, i, summarize, results)
 	checkError(err)
+
+	if summarize != "" {
+		for output, j := range aggregate.Outputs {
+			output = strings.Replace(output, "\n", " ", -1)
+			print = append(print, (bold(fillSpace(output, 50)) + strconv.Itoa(j) + "\n")...)
+		}
+
+		return string(print)
+	}
 
 	print = append(print, (bold("OK        ") + frontColor(strconv.Itoa(aggregate.Ok), 0) + "\n")...)
 	print = append(print, (bold("WARNING   ") + frontColor(strconv.Itoa(aggregate.Warning), 1) + "\n")...)

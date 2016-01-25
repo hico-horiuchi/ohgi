@@ -22,6 +22,7 @@ func main() {
 		delete     bool
 		expiration string
 		reason     string
+		summarize  string
 		results    bool
 		consumers  int
 		messages   int
@@ -206,7 +207,7 @@ func main() {
 					fmt.Print(ohgi.GetAggregatesCheck(sensu.DefaultAPI, args[0], age))
 				}
 			case 2:
-				fmt.Print(ohgi.GetAggregatesCheckIssued(sensu.DefaultAPI, args[0], args[1], results))
+				fmt.Print(ohgi.GetAggregatesCheckIssued(sensu.DefaultAPI, args[0], args[1], summarize, results))
 			}
 		},
 	}
@@ -214,6 +215,7 @@ func main() {
 	aggregatesCmd.Flags().IntVarP(&offset, "offset", "o", -1, "The number of aggregates to offset before returning items")
 	aggregatesCmd.Flags().IntVarP(&age, "age", "a", -1, "The number of seconds old an aggregate must be to be listed")
 	aggregatesCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Deletes all aggregates for a check")
+	aggregatesCmd.Flags().StringVarP(&summarize, "summarize", "s", "", "Summarizes the output field in the event data")
 	aggregatesCmd.Flags().BoolVarP(&results, "results", "r", false, "Return the raw result data")
 	rootCmd.AddCommand(aggregatesCmd)
 

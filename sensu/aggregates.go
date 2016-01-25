@@ -12,11 +12,12 @@ type AggregateList struct {
 }
 
 type AggregateStruct struct {
-	Ok       int `json:"ok"`
-	Warning  int `json:"warning"`
-	Critical int `json:"critical"`
-	Unknown  int `json:"unknown"`
-	Total    int `json:"total"`
+	Ok       int            `json:"ok"`
+	Warning  int            `json:"warning"`
+	Critical int            `json:"critical"`
+	Unknown  int            `json:"unknown"`
+	Total    int            `json:"total"`
+	Outputs  map[string]int `json:"outputs"`
 	Results  []struct {
 		Client string `json:"client"`
 		Output string `json:"output"`
@@ -75,10 +76,10 @@ func (api API) DeleteAggregatesCheck(check string) error {
 }
 
 // Returns an aggregate.
-func (api API) GetAggregatesCheckIssued(check string, issued int64, results bool) (AggregateStruct, error) {
+func (api API) GetAggregatesCheckIssued(check string, issued int64, summarize string, results bool) (AggregateStruct, error) {
 	var aggregate AggregateStruct
 
-	response, err := api.get(fmt.Sprintf("/aggregates/%s/%d?results=%t", check, issued, results))
+	response, err := api.get(fmt.Sprintf("/aggregates/%s/%d?summarize=%s&results=%t", check, issued, summarize, results))
 	if err != nil {
 		return aggregate, err
 	} else if response.StatusCode != 200 {
