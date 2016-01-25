@@ -37,8 +37,8 @@
       }]
     }
 
-Specify a datacenter by `-x`(`--datacenter`) option as below.  
-If a datacenter is not specified, use first of `datacenters`.
+Specify a datacenter by `-x` ( `--datacenter` ) option as below.  
+If a datacenter is not specified, use first of `datacenters` .
 
     $ ohgi -x server-1 events
 
