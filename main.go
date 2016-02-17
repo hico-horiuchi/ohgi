@@ -16,16 +16,17 @@ var version string
 func main() {
 	var (
 		age        int
+		config     string
+		consumers  int
 		datacenter string
-		limit      int
-		offset     int
 		delete     bool
 		expiration string
-		reason     string
-		summarize  string
-		results    bool
-		consumers  int
+		limit      int
 		messages   int
+		offset     int
+		reason     string
+		results    bool
+		summarize  string
 	)
 
 	if !isatty.IsTerminal(os.Stdout.Fd()) {
@@ -37,9 +38,10 @@ func main() {
 		Short: "Sensu command-line tool by Golang",
 		Long:  "Sensu command-line tool by Golang\nhttps://github.com/hico-horiuchi/ohgi",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			sensu.DefaultAPI = ohgi.LoadConfig(datacenter)
+			sensu.DefaultAPI = ohgi.LoadConfig(config, datacenter)
 		},
 	}
+	rootCmd.PersistentFlags().StringVarP(&config, "config", "C", "", "Specify a configuration file")
 	rootCmd.PersistentFlags().StringVarP(&datacenter, "datacenter", "x", "", "Specify a datacenter")
 
 	clientsCmd := &cobra.Command{

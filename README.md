@@ -21,7 +21,7 @@
 
 #### Configuration
 
-`~/.ohgi.json`
+For example:
 
     {
       "datacenters": [{
@@ -36,6 +36,11 @@
         "port": 4567
       }]
     }
+
+Specify a configuration file by `-C` ( `--config` ) option as below.  
+If a configuration file is not specified, use `~/.ohgi.json` .
+
+    $ ohgi -C ohgi.json events
 
 Specify a datacenter by `-x` ( `--datacenter` ) option as below.  
 If a datacenter is not specified, use first of `datacenters` .

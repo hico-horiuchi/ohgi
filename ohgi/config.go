@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/hico-horiuchi/ohgi/sensu"
 )
@@ -18,10 +19,10 @@ type datacenterStruct struct {
 	Name string `json:"name"`
 }
 
-func LoadConfig(name string) *sensu.API {
+func LoadConfig(path string, name string) *sensu.API {
 	var config configStruct
 
-	bytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.ohgi.json")
+	bytes, err := getConfig(path)
 	checkError(err)
 
 	err = json.Unmarshal(bytes, &config)
@@ -36,6 +37,18 @@ func LoadConfig(name string) *sensu.API {
 		User:     datacenter.User,
 		Password: datacenter.Password,
 	}
+}
+
+func getConfig(path string) ([]byte, error) {
+	home := os.Getenv("HOME")
+
+	if path == "" {
+		path = filepath.Join(home, ".ohgi.json")
+	} else if len(path) > 1 && path[:2] == "~/" {
+		path = filepath.Join(home, path[2:])
+	}
+
+	return ioutil.ReadFile(path)
 }
 
 func (config configStruct) selectDatacenter(name string) (*datacenterStruct, error) {
