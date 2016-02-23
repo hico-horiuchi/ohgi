@@ -1,6 +1,7 @@
 package ohgi
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -8,8 +9,6 @@ import (
 )
 
 func GetAggregates(api *sensu.API, limit int, offset int) string {
-	var line string
-
 	aggregates, err := api.GetAggregates(limit, offset)
 	checkError(err)
 
@@ -17,18 +16,19 @@ func GetAggregates(api *sensu.API, limit int, offset int) string {
 		return "No aggregates\n"
 	}
 
-	print := []byte(bold("CHECK                         ISSUES\n"))
+	table := newUitable()
+	table.AddRow(bold("CHECK"), bold("ISSUES"))
 	for _, aggregate := range aggregates {
-		line = fillSpace(aggregate.Check, 30) + strconv.Itoa(len(aggregate.Issued)) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			aggregate.Check,
+			strconv.Itoa(len(aggregate.Issued)),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetAggregatesCheck(api *sensu.API, check string, age int) string {
-	var line string
-
 	issues, err := api.GetAggregatesCheck(check, age)
 	checkError(err)
 
@@ -36,13 +36,16 @@ func GetAggregatesCheck(api *sensu.API, check string, age int) string {
 		return "No aggregates\n"
 	}
 
-	print := []byte(bold("TIMESTAMP            ISSUED\n"))
+	table := newUitable()
+	table.AddRow(bold("TIMESTAMP"), bold("ISSUED"))
 	for _, issued := range issues {
-		line = utoa(issued) + "  " + strconv.FormatInt(issued, 10) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			utoa(issued),
+			strconv.FormatInt(issued, 10),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func DeleteAggregatesCheck(api *sensu.API, check string) string {
@@ -53,8 +56,6 @@ func DeleteAggregatesCheck(api *sensu.API, check string) string {
 }
 
 func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, summarize string, results bool) string {
-	var print []byte
-
 	if issued == "latest" {
 		issues, err := api.GetAggregatesCheck(check, -1)
 		checkError(err)
@@ -71,20 +72,23 @@ func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, summa
 	aggregate, err := api.GetAggregatesCheckIssued(check, i, summarize, results)
 	checkError(err)
 
+	table := newUitable()
 	if summarize != "" {
 		for output, j := range aggregate.Outputs {
-			output = strings.Replace(output, "\n", " ", -1)
-			print = append(print, (bold(fillSpace(output, 50)) + strconv.Itoa(j) + "\n")...)
+			table.AddRow(
+				bold(strings.Replace(output, "\n", " ", -1)),
+				strconv.Itoa(j),
+			)
 		}
 
-		return string(print)
+		return fmt.Sprintln(table)
 	}
 
-	print = append(print, (bold("OK        ") + fgColor(strconv.Itoa(aggregate.Ok), 0) + "\n")...)
-	print = append(print, (bold("WARNING   ") + fgColor(strconv.Itoa(aggregate.Warning), 1) + "\n")...)
-	print = append(print, (bold("CRITICAL  ") + fgColor(strconv.Itoa(aggregate.Critical), 2) + "\n")...)
-	print = append(print, (bold("UNKNOWN   ") + fgColor(strconv.Itoa(aggregate.Unknown), 3) + "\n")...)
-	print = append(print, (bold("TOTAL     ") + strconv.Itoa(aggregate.Total) + "\n")...)
+	table.AddRow(bold("OK:"), fgColor(strconv.Itoa(aggregate.Ok), 0))
+	table.AddRow(bold("WARNING:"), fgColor(strconv.Itoa(aggregate.Warning), 1))
+	table.AddRow(bold("CRITICAL:"), fgColor(strconv.Itoa(aggregate.Critical), 2))
+	table.AddRow(bold("UNKNOWN:"), fgColor(strconv.Itoa(aggregate.Unknown), 3))
+	table.AddRow(bold("TOTAL:"), strconv.Itoa(aggregate.Total))
 
 	if results {
 		clients := make([]string, len(aggregate.Results))
@@ -92,8 +96,8 @@ func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, summa
 			clients[j] = result.Client
 		}
 
-		print = append(print, (bold("CLIENTS   ") + strings.Join(clients, ", ") + "\n")...)
+		table.AddRow(bold("CLIENTS:"), strings.Join(clients, ", "))
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }

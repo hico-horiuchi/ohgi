@@ -1,6 +1,7 @@
 package ohgi
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,8 +10,6 @@ import (
 )
 
 func GetResults(api *sensu.API) string {
-	var line string
-
 	results, err := api.GetResults()
 	checkError(err)
 
@@ -18,19 +17,24 @@ func GetResults(api *sensu.API) string {
 		return "No current check results\n"
 	}
 
-	print := []byte(bold("  CLIENT                                  CHECK                         EXECUTED\n"))
+	table := newUitable()
+	table.AddRow("", bold("CLIENT"), bold("CHECK"), bold("EXECUTED"))
 	for _, result := range results {
-		line = indicateStatus(result.Check.Status) + fillSpace(result.Client, 40) + fillSpace(result.Check.Name, 30) + utoa(result.Check.Executed) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			indicateStatus(result.Check.Status),
+			result.Client,
+			result.Check.Name,
+			utoa(result.Check.Executed),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetResultsWildcard(api *sensu.API, pattern string) string {
 	var match []string
 	var matches []int
-	var line string
+	var result sensu.ResultStruct
 
 	results, err := api.GetResults()
 	checkError(err)
@@ -47,19 +51,22 @@ func GetResultsWildcard(api *sensu.API, pattern string) string {
 		return "No current check results that matches " + pattern + "\n"
 	}
 
-	print := []byte(bold("  CLIENT                                  CHECK                         EXECUTED\n"))
+	table := newUitable()
+	table.AddRow("", bold("CLIENT"), bold("CHECK"), bold("EXECUTED"))
 	for _, i := range matches {
-		result := results[i]
-		line = indicateStatus(result.Check.Status) + fillSpace(result.Client, 40) + fillSpace(result.Check.Name, 30) + utoa(result.Check.Executed) + "\n"
-		print = append(print, line...)
+		result = results[i]
+		table.AddRow(
+			indicateStatus(result.Check.Status),
+			result.Client,
+			result.Check.Name,
+			utoa(result.Check.Executed),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetResultsClient(api *sensu.API, client string) string {
-	var line, output string
-
 	results, err := api.GetResultsClient(client)
 	checkError(err)
 
@@ -67,33 +74,36 @@ func GetResultsClient(api *sensu.API, client string) string {
 		return "No current check results for " + client + "\n"
 	}
 
-	print := []byte(bold("  CHECK                         OUTPUT                                            EXECUTED\n"))
+	table := newUitable()
+	table.AddRow("", bold("CHECK"), bold("OUTPUT"), bold("EXECUTED"))
 	for _, result := range results {
-		output = strings.Replace(result.Check.Output, "\n", " ", -1)
-		line = indicateStatus(result.Check.Status) + fillSpace(result.Check.Name, 30) + fillSpace(output, 50) + utoa(result.Check.Executed) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			indicateStatus(result.Check.Status),
+			result.Check.Name,
+			strings.Replace(result.Check.Output, "\n", " ", -1),
+			utoa(result.Check.Executed),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetResultsClientCheck(api *sensu.API, client string, check string) string {
-	var print []byte
-
 	result, err := api.GetResultsClientCheck(client, check)
 	checkError(err)
 
-	print = append(print, (bold("CLIENT         ") + result.Client + "\n")...)
-	print = append(print, (bold("CHECK          ") + result.Check.Name + "\n")...)
-	print = append(print, (bold("COMMAND        ") + result.Check.Command + "\n")...)
-	print = append(print, (bold("SUBSCRIBERS    ") + strings.Join(result.Check.Subscribers, ", ") + "\n")...)
-	print = append(print, (bold("INTERVAL       ") + strconv.Itoa(result.Check.Interval) + "\n")...)
-	print = append(print, (bold("HANDLERS       ") + strings.Join(result.Check.Handlers, ", ") + "\n")...)
-	print = append(print, (bold("ISSUED         ") + utoa(result.Check.Issued) + "\n")...)
-	print = append(print, (bold("EXECUTED       ") + utoa(result.Check.Executed) + "\n")...)
-	print = append(print, (bold("OUTPUT         ") + strings.Replace(result.Check.Output, "\n", " ", -1) + "\n")...)
-	print = append(print, (bold("STATUS         ") + colorStatus(result.Check.Status) + "\n")...)
-	print = append(print, (bold("DURATION       ") + strconv.FormatFloat(result.Check.Duration, 'f', 3, 64) + "\n")...)
+	table := newUitable()
+	table.AddRow(bold("CLIENT:"), result.Client)
+	table.AddRow(bold("CHECK:"), result.Check.Name)
+	table.AddRow(bold("COMMAND:"), result.Check.Command)
+	table.AddRow(bold("SUBSCRIBERS:"), strings.Join(result.Check.Subscribers, ", "))
+	table.AddRow(bold("INTERVAL:"), strconv.Itoa(result.Check.Interval))
+	table.AddRow(bold("HANDLERS:"), strings.Join(result.Check.Handlers, ", "))
+	table.AddRow(bold("ISSUED:"), utoa(result.Check.Issued))
+	table.AddRow(bold("EXECUTED:"), utoa(result.Check.Executed))
+	table.AddRow(bold("OUTPUT:"), strings.Replace(result.Check.Output, "\n", " ", -1))
+	table.AddRow(bold("STATUS:"), colorStatus(result.Check.Status))
+	table.AddRow(bold("DURATION:"), strconv.FormatFloat(result.Check.Duration, 'f', 3, 64))
 
-	return string(print)
+	return fmt.Sprintln(table)
 }

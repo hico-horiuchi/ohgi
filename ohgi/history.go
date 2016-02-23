@@ -1,10 +1,12 @@
 package ohgi
 
-import "github.com/hico-horiuchi/ohgi/sensu"
+import (
+	"fmt"
+
+	"github.com/hico-horiuchi/ohgi/sensu"
+)
 
 func GetClientsHistory(api *sensu.API, client string) string {
-	var line string
-
 	histories, err := api.GetClientsHistory(client)
 	checkError(err)
 
@@ -12,11 +14,15 @@ func GetClientsHistory(api *sensu.API, client string) string {
 		return "No histories\n"
 	}
 
-	print := []byte(bold("CHECK                         HISTORY                                         TIMESTAMP\n"))
+	table := newUitable()
+	table.AddRow(bold("CHECK"), bold("HISTORY"), bold("TIMESTAMP"))
 	for _, history := range histories {
-		line = fillSpace(history.Check, 30) + colorHistory(fillSpace(stoa(history.History, ", "), 48)) + utoa(history.LastExecution) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			history.Check,
+			colorHistory(stoa(history.History, ", ")),
+			utoa(history.LastExecution),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }

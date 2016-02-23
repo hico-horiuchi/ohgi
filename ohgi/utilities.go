@@ -5,7 +5,8 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-	"strings"
+
+	"github.com/hico-horiuchi/uitable"
 )
 
 func checkError(err error) {
@@ -15,23 +16,19 @@ func checkError(err error) {
 	}
 }
 
-func fillSpace(str string, max int) string {
-	length := len(str)
-	padding := 2
-	width := max - padding
-	if length > width {
-		return str[0:width] + strings.Repeat(" ", padding)
-	} else {
-		return str + strings.Repeat(" ", max-length)
-	}
+func newUitable() *uitable.Table {
+	table := uitable.New()
+	table.MaxColWidth = uint(terminalWidth / 2)
+
+	return table
 }
 
 func indicateStatus(status int) string {
 	if !escapeSequence {
-		return strconv.Itoa(status) + " "
+		return strconv.Itoa(status)
 	}
 
-	return bgColor(" ", status) + " "
+	return bgColor(" ", status)
 }
 
 func colorStatus(status int) string {

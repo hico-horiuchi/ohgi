@@ -1,6 +1,7 @@
 package ohgi
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -20,7 +21,6 @@ type contentStruct struct {
 
 func GetSilence(api *sensu.API) string {
 	var silences []silenceStruct
-	var line string
 	var path []string
 	var expire string
 
@@ -31,7 +31,8 @@ func GetSilence(api *sensu.API) string {
 		return "No silence stashes\n"
 	}
 
-	print := []byte(bold("CLIENT                                  CHECK                         REASON                        EXPIRATION\n"))
+	table := newUitable()
+	table.AddRow(bold("CLIENT"), bold("CHECK"), bold("REASON"), bold("EXPIRATION"))
 	for _, silence := range silences {
 		path = strings.Split(silence.Path, "/")
 		if path[0] != "silence" {
@@ -46,11 +47,15 @@ func GetSilence(api *sensu.API) string {
 			expire = utoa(time.Now().Unix() + silence.Expire)
 		}
 
-		line = fillSpace(path[1], 40) + fillSpace(path[2], 30) + fillSpace(silence.Content.Reason, 30) + expire + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			path[1],
+			path[2],
+			silence.Content.Reason,
+			expire,
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func PostSilence(api *sensu.API, client string, check string, expiration string, reason string) string {

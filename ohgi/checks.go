@@ -1,6 +1,7 @@
 package ohgi
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,8 +10,6 @@ import (
 )
 
 func GetChecks(api *sensu.API) string {
-	var line string
-
 	checks, err := api.GetChecks()
 	checkError(err)
 
@@ -18,19 +17,23 @@ func GetChecks(api *sensu.API) string {
 		return "No checks\n"
 	}
 
-	print := []byte(bold("NAME                          COMMAND                                                     INTERVAL\n"))
+	table := newUitable()
+	table.AddRow(bold("NAME"), bold("COMMAND"), bold("INTERVAL"))
 	for _, check := range checks {
-		line = fillSpace(check.Name, 30) + fillSpace(check.Command, 60) + strconv.Itoa(check.Interval) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			check.Name,
+			check.Command,
+			strconv.Itoa(check.Interval),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetChecksWildcard(api *sensu.API, pattern string) string {
 	var match []string
 	var matches []int
-	var line string
+	var check sensu.CheckStruct
 
 	checks, err := api.GetChecks()
 	checkError(err)
@@ -47,27 +50,30 @@ func GetChecksWildcard(api *sensu.API, pattern string) string {
 		return "No checks that matches " + pattern + "\n"
 	}
 
-	print := []byte(bold("NAME                          COMMAND                                                     INTERVAL\n"))
+	table := newUitable()
+	table.AddRow(bold("NAME"), bold("COMMAND"), bold("INTERVAL"))
 	for _, i := range matches {
-		check := checks[i]
-		line = fillSpace(check.Name, 30) + fillSpace(check.Command, 60) + strconv.Itoa(check.Interval) + "\n"
-		print = append(print, line...)
+		check = checks[i]
+		table.AddRow(
+			check.Name,
+			check.Command,
+			strconv.Itoa(check.Interval),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetChecksCheck(api *sensu.API, name string) string {
-	var print []byte
-
 	check, err := api.GetChecksCheck(name)
 	checkError(err)
 
-	print = append(print, (bold("NAME         ") + check.Name + "\n")...)
-	print = append(print, (bold("COMMAND      ") + check.Command + "\n")...)
-	print = append(print, (bold("SUBSCRIBERS  ") + strings.Join(check.Subscribers, ", ") + "\n")...)
-	print = append(print, (bold("INTERVAL     ") + strconv.Itoa(check.Interval) + "\n")...)
-	print = append(print, (bold("HANDLERS     ") + strings.Join(check.Handlers, ", ") + "\n")...)
+	table := newUitable()
+	table.AddRow(bold("NAME:"), check.Name)
+	table.AddRow(bold("COMMAND:"), check.Command)
+	table.AddRow(bold("SUBSCRIBERS:"), strings.Join(check.Subscribers, ", "))
+	table.AddRow(bold("INTERVAL:"), strconv.Itoa(check.Interval))
+	table.AddRow(bold("HANDLERS:"), strings.Join(check.Handlers, ", "))
 
-	return string(print)
+	return fmt.Sprintln(table)
 }

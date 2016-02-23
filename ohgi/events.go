@@ -1,6 +1,7 @@
 package ohgi
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,8 +10,6 @@ import (
 )
 
 func GetEvents(api *sensu.API) string {
-	var line string
-
 	events, err := api.GetEvents()
 	checkError(err)
 
@@ -18,19 +17,25 @@ func GetEvents(api *sensu.API) string {
 		return "No current events\n"
 	}
 
-	print := []byte(bold("  CLIENT                                  CHECK                         #         EXECUTED\n"))
+	table := newUitable()
+	table.AddRow("", bold("CLIENT"), bold("CHECK"), bold("#"), bold("EXECUTED"))
 	for _, event := range events {
-		line = indicateStatus(event.Check.Status) + fillSpace(event.Client.Name, 40) + fillSpace(event.Check.Name, 30) + fillSpace(strconv.Itoa(event.Occurrences), 10) + utoa(event.Check.Executed) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			indicateStatus(event.Check.Status),
+			event.Client.Name,
+			event.Check.Name,
+			strconv.Itoa(event.Occurrences),
+			utoa(event.Check.Executed),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetEventsWildcard(api *sensu.API, pattern string) string {
 	var match []string
 	var matches []int
-	var line string
+	var event sensu.EventStruct
 
 	events, err := api.GetEvents()
 	checkError(err)
@@ -44,22 +49,26 @@ func GetEventsWildcard(api *sensu.API, pattern string) string {
 	}
 
 	if len(matches) == 0 {
-		return "No current events that match " + pattern + "\n"
+		return "No current events that matches " + pattern + "\n"
 	}
 
-	print := []byte(bold("  CLIENT                                  CHECK                         #         EXECUTED\n"))
+	table := newUitable()
+	table.AddRow("", bold("CLIENT"), bold("CHECK"), bold("#"), bold("EXECUTED"))
 	for _, i := range matches {
-		event := events[i]
-		line = indicateStatus(event.Check.Status) + fillSpace(event.Client.Name, 40) + fillSpace(event.Check.Name, 30) + fillSpace(strconv.Itoa(event.Occurrences), 10) + utoa(event.Check.Executed) + "\n"
-		print = append(print, line...)
+		event = events[i]
+		table.AddRow(
+			indicateStatus(event.Check.Status),
+			event.Client.Name,
+			event.Check.Name,
+			strconv.Itoa(event.Occurrences),
+			utoa(event.Check.Executed),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetEventsClient(api *sensu.API, client string) string {
-	var line, output string
-
 	events, err := api.GetEventsClient(client)
 	checkError(err)
 
@@ -67,41 +76,44 @@ func GetEventsClient(api *sensu.API, client string) string {
 		return "No current events for " + client + "\n"
 	}
 
-	print := []byte(bold("  CHECK                         OUTPUT                                            EXECUTED\n"))
+	table := newUitable()
+	table.AddRow("", bold("CHECK"), bold("OUTPUT"), bold("EXECUTED"))
 	for _, event := range events {
-		output = strings.Replace(event.Check.Output, "\n", " ", -1)
-		line = indicateStatus(event.Check.Status) + fillSpace(event.Check.Name, 30) + fillSpace(output, 50) + utoa(event.Check.Executed) + "\n"
-		print = append(print, line...)
+		table.AddRow(
+			indicateStatus(event.Check.Status),
+			event.Check.Name,
+			strings.Replace(event.Check.Output, "\n", " ", -1),
+			utoa(event.Check.Executed),
+		)
 	}
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func GetEventsClientCheck(api *sensu.API, client string, check string) string {
-	var print []byte
-
 	event, err := api.GetEventsClientCheck(client, check)
 	checkError(err)
 
-	print = append(print, (bold("CLIENT         ") + event.Client.Name + "\n")...)
-	print = append(print, (bold("ADDRESS        ") + event.Client.Address + "\n")...)
-	print = append(print, (bold("SUBSCRIPTIONS  ") + strings.Join(event.Client.Subscriptions, ", ") + "\n")...)
-	print = append(print, (bold("TIMESTAMP      ") + utoa(event.Client.Timestamp) + "\n")...)
-	print = append(print, (bold("CHECK          ") + event.Check.Name + "\n")...)
-	print = append(print, (bold("COMMAND        ") + event.Check.Command + "\n")...)
-	print = append(print, (bold("SUBSCRIBERS    ") + strings.Join(event.Check.Subscribers, ", ") + "\n")...)
-	print = append(print, (bold("INTERVAL       ") + strconv.Itoa(event.Check.Interval) + "\n")...)
-	print = append(print, (bold("HANDLERS       ") + strings.Join(event.Check.Handlers, ", ") + "\n")...)
-	print = append(print, (bold("ISSUED         ") + utoa(event.Check.Issued) + "\n")...)
-	print = append(print, (bold("EXECUTED       ") + utoa(event.Check.Executed) + "\n")...)
-	print = append(print, (bold("OUTPUT         ") + strings.Replace(event.Check.Output, "\n", " ", -1) + "\n")...)
-	print = append(print, (bold("STATUS         ") + colorStatus(event.Check.Status) + "\n")...)
-	print = append(print, (bold("DURATION       ") + strconv.FormatFloat(event.Check.Duration, 'f', 3, 64) + "\n")...)
-	print = append(print, (bold("HISTORY        ") + colorHistory(strings.Join(event.Check.History, ", ")) + "\n")...)
-	print = append(print, (bold("OCCURRENCES    ") + strconv.Itoa(event.Occurrences) + "\n")...)
-	print = append(print, (bold("ACTION         ") + event.Action + "\n")...)
+	table := newUitable()
+	table.AddRow(bold("CLIENT:"), event.Client.Name)
+	table.AddRow(bold("ADDRESS:"), event.Client.Address)
+	table.AddRow(bold("SUBSCRIPTIONS:"), strings.Join(event.Client.Subscriptions, ", "))
+	table.AddRow(bold("TIMESTAMP:"), utoa(event.Client.Timestamp))
+	table.AddRow(bold("CHECK:"), event.Check.Name)
+	table.AddRow(bold("COMMAND:"), event.Check.Command)
+	table.AddRow(bold("SUBSCRIBERS:"), strings.Join(event.Check.Subscribers, ", "))
+	table.AddRow(bold("INTERVAL:"), strconv.Itoa(event.Check.Interval))
+	table.AddRow(bold("HANDLERS:"), strings.Join(event.Check.Handlers, ", "))
+	table.AddRow(bold("ISSUED:"), utoa(event.Check.Issued))
+	table.AddRow(bold("EXECUTED:"), utoa(event.Check.Executed))
+	table.AddRow(bold("OUTPUT:"), strings.Replace(event.Check.Output, "\n", " ", -1))
+	table.AddRow(bold("STATUS:"), colorStatus(event.Check.Status))
+	table.AddRow(bold("DURATION:"), strconv.FormatFloat(event.Check.Duration, 'f', 3, 64))
+	table.AddRow(bold("HISTORY:"), colorHistory(strings.Join(event.Check.History, ", ")))
+	table.AddRow(bold("OCCURRENCES:"), strconv.Itoa(event.Occurrences))
+	table.AddRow(bold("ACTION:"), event.Action)
 
-	return string(print)
+	return fmt.Sprintln(table)
 }
 
 func DeleteEventsClientCheck(api *sensu.API, client string, check string) string {
