@@ -95,9 +95,9 @@ func GetEventsClientCheck(api *sensu.API, client string, check string) string {
 	print = append(print, (bold("ISSUED         ") + utoa(event.Check.Issued) + "\n")...)
 	print = append(print, (bold("EXECUTED       ") + utoa(event.Check.Executed) + "\n")...)
 	print = append(print, (bold("OUTPUT         ") + strings.Replace(event.Check.Output, "\n", " ", -1) + "\n")...)
-	print = append(print, (bold("STATUS         ") + paintStatus(event.Check.Status) + "\n")...)
+	print = append(print, (bold("STATUS         ") + colorStatus(event.Check.Status) + "\n")...)
 	print = append(print, (bold("DURATION       ") + strconv.FormatFloat(event.Check.Duration, 'f', 3, 64) + "\n")...)
-	print = append(print, (bold("HISTORY        ") + paintHistory(strings.Join(event.Check.History, ", ")) + "\n")...)
+	print = append(print, (bold("HISTORY        ") + colorHistory(strings.Join(event.Check.History, ", ")) + "\n")...)
 	print = append(print, (bold("OCCURRENCES    ") + strconv.Itoa(event.Occurrences) + "\n")...)
 	print = append(print, (bold("ACTION         ") + event.Action + "\n")...)
 

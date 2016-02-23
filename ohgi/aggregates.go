@@ -80,10 +80,10 @@ func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, summa
 		return string(print)
 	}
 
-	print = append(print, (bold("OK        ") + frontColor(strconv.Itoa(aggregate.Ok), 0) + "\n")...)
-	print = append(print, (bold("WARNING   ") + frontColor(strconv.Itoa(aggregate.Warning), 1) + "\n")...)
-	print = append(print, (bold("CRITICAL  ") + frontColor(strconv.Itoa(aggregate.Critical), 2) + "\n")...)
-	print = append(print, (bold("UNKNOWN   ") + frontColor(strconv.Itoa(aggregate.Unknown), 3) + "\n")...)
+	print = append(print, (bold("OK        ") + fgColor(strconv.Itoa(aggregate.Ok), 0) + "\n")...)
+	print = append(print, (bold("WARNING   ") + fgColor(strconv.Itoa(aggregate.Warning), 1) + "\n")...)
+	print = append(print, (bold("CRITICAL  ") + fgColor(strconv.Itoa(aggregate.Critical), 2) + "\n")...)
+	print = append(print, (bold("UNKNOWN   ") + fgColor(strconv.Itoa(aggregate.Unknown), 3) + "\n")...)
 	print = append(print, (bold("TOTAL     ") + strconv.Itoa(aggregate.Total) + "\n")...)
 
 	if results {

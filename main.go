@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/hico-horiuchi/ohgi/ohgi"
 	"github.com/hico-horiuchi/ohgi/sensu"
-	isatty "github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 )
 
@@ -29,15 +27,12 @@ func main() {
 		summarize  string
 	)
 
-	if !isatty.IsTerminal(os.Stdout.Fd()) {
-		ohgi.EscapeSequence = false
-	}
-
 	rootCmd := &cobra.Command{
 		Use:   "ohgi",
 		Short: "Sensu command-line tool by Golang",
 		Long:  "Sensu command-line tool by Golang\nhttps://github.com/hico-horiuchi/ohgi",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			ohgi.Initialize()
 			sensu.DefaultAPI = ohgi.LoadConfig(config, datacenter)
 		},
 	}

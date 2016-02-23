@@ -44,7 +44,7 @@ func GetResultsWildcard(api *sensu.API, pattern string) string {
 	}
 
 	if len(matches) == 0 {
-		return "No current check results that match " + pattern + "\n"
+		return "No current check results that matches " + pattern + "\n"
 	}
 
 	print := []byte(bold("  CLIENT                                  CHECK                         EXECUTED\n"))
@@ -92,7 +92,7 @@ func GetResultsClientCheck(api *sensu.API, client string, check string) string {
 	print = append(print, (bold("ISSUED         ") + utoa(result.Check.Issued) + "\n")...)
 	print = append(print, (bold("EXECUTED       ") + utoa(result.Check.Executed) + "\n")...)
 	print = append(print, (bold("OUTPUT         ") + strings.Replace(result.Check.Output, "\n", " ", -1) + "\n")...)
-	print = append(print, (bold("STATUS         ") + paintStatus(result.Check.Status) + "\n")...)
+	print = append(print, (bold("STATUS         ") + colorStatus(result.Check.Status) + "\n")...)
 	print = append(print, (bold("DURATION       ") + strconv.FormatFloat(result.Check.Duration, 'f', 3, 64) + "\n")...)
 
 	return string(print)

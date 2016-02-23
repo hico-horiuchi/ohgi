@@ -1,3 +1,4 @@
+gom 'github.com/fatih/color'
 gom 'github.com/mattn/go-isatty'
 gom 'github.com/spf13/cobra'
 gom 'github.com/tcnksm/go-latest'
