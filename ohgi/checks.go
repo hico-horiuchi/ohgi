@@ -68,7 +68,7 @@ func GetChecksCheck(api *sensu.API, name string) string {
 	check, err := api.GetChecksCheck(name)
 	checkError(err)
 
-	table := newUitable()
+	table := newUitable(true)
 	table.AddRow(bold("NAME:"), check.Name)
 	table.AddRow(bold("COMMAND:"), check.Command)
 	table.AddRow(bold("SUBSCRIBERS:"), strings.Join(check.Subscribers, ", "))

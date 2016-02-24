@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/hico-horiuchi/uitable"
 )
@@ -16,11 +17,18 @@ func checkError(err error) {
 	}
 }
 
-func newUitable() *uitable.Table {
+func newUitable(wrap ...bool) *uitable.Table {
 	table := uitable.New()
 	table.MaxColWidth = uint(terminalWidth / 2)
+	if wrap != nil && len(wrap) > 0 && wrap[0] {
+		table.Wrap = true
+	}
 
 	return table
+}
+
+func formatOutput(output string) string {
+	return strings.TrimSpace(strings.Replace(output, "\n", " ", -1))
 }
 
 func indicateStatus(status int) string {

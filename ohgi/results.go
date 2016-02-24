@@ -80,7 +80,7 @@ func GetResultsClient(api *sensu.API, client string) string {
 		table.AddRow(
 			indicateStatus(result.Check.Status),
 			result.Check.Name,
-			strings.Replace(result.Check.Output, "\n", " ", -1),
+			formatOutput(result.Check.Output),
 			utoa(result.Check.Executed),
 		)
 	}
@@ -92,7 +92,7 @@ func GetResultsClientCheck(api *sensu.API, client string, check string) string {
 	result, err := api.GetResultsClientCheck(client, check)
 	checkError(err)
 
-	table := newUitable()
+	table := newUitable(true)
 	table.AddRow(bold("CLIENT:"), result.Client)
 	table.AddRow(bold("CHECK:"), result.Check.Name)
 	table.AddRow(bold("COMMAND:"), result.Check.Command)
@@ -101,7 +101,7 @@ func GetResultsClientCheck(api *sensu.API, client string, check string) string {
 	table.AddRow(bold("HANDLERS:"), strings.Join(result.Check.Handlers, ", "))
 	table.AddRow(bold("ISSUED:"), utoa(result.Check.Issued))
 	table.AddRow(bold("EXECUTED:"), utoa(result.Check.Executed))
-	table.AddRow(bold("OUTPUT:"), strings.Replace(result.Check.Output, "\n", " ", -1))
+	table.AddRow(bold("OUTPUT:"), formatOutput(result.Check.Output))
 	table.AddRow(bold("STATUS:"), colorStatus(result.Check.Status))
 	table.AddRow(bold("DURATION:"), strconv.FormatFloat(result.Check.Duration, 'f', 3, 64))
 

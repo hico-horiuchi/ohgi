@@ -82,7 +82,7 @@ func GetEventsClient(api *sensu.API, client string) string {
 		table.AddRow(
 			indicateStatus(event.Check.Status),
 			event.Check.Name,
-			strings.Replace(event.Check.Output, "\n", " ", -1),
+			formatOutput(event.Check.Output),
 			utoa(event.Check.Executed),
 		)
 	}
@@ -94,7 +94,7 @@ func GetEventsClientCheck(api *sensu.API, client string, check string) string {
 	event, err := api.GetEventsClientCheck(client, check)
 	checkError(err)
 
-	table := newUitable()
+	table := newUitable(true)
 	table.AddRow(bold("CLIENT:"), event.Client.Name)
 	table.AddRow(bold("ADDRESS:"), event.Client.Address)
 	table.AddRow(bold("SUBSCRIPTIONS:"), strings.Join(event.Client.Subscriptions, ", "))
@@ -106,7 +106,7 @@ func GetEventsClientCheck(api *sensu.API, client string, check string) string {
 	table.AddRow(bold("HANDLERS:"), strings.Join(event.Check.Handlers, ", "))
 	table.AddRow(bold("ISSUED:"), utoa(event.Check.Issued))
 	table.AddRow(bold("EXECUTED:"), utoa(event.Check.Executed))
-	table.AddRow(bold("OUTPUT:"), strings.Replace(event.Check.Output, "\n", " ", -1))
+	table.AddRow(bold("OUTPUT:"), formatOutput(event.Check.Output))
 	table.AddRow(bold("STATUS:"), colorStatus(event.Check.Status))
 	table.AddRow(bold("DURATION:"), strconv.FormatFloat(event.Check.Duration, 'f', 3, 64))
 	table.AddRow(bold("HISTORY:"), colorHistory(strings.Join(event.Check.History, ", ")))

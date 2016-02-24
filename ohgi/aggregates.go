@@ -72,11 +72,11 @@ func GetAggregatesCheckIssued(api *sensu.API, check string, issued string, summa
 	aggregate, err := api.GetAggregatesCheckIssued(check, i, summarize, results)
 	checkError(err)
 
-	table := newUitable()
-	if summarize != "" {
+	table := newUitable(true)
+	if summarize == "output" {
 		for output, j := range aggregate.Outputs {
 			table.AddRow(
-				bold(strings.Replace(output, "\n", " ", -1)),
+				bold(formatOutput(output)+":"),
 				strconv.Itoa(j),
 			)
 		}

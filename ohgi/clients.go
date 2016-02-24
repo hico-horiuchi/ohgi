@@ -67,7 +67,7 @@ func GetClientsClient(api *sensu.API, name string) string {
 	client, err := api.GetClientsClient(name)
 	checkError(err)
 
-	table := newUitable()
+	table := newUitable(true)
 	table.AddRow(bold("NAME:"), client.Name)
 	table.AddRow(bold("ADDRESS:"), client.Address)
 	table.AddRow(bold("SUBSCRIPTIONS:"), strings.Join(client.Subscriptions, ", "))
