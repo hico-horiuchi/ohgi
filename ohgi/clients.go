@@ -22,7 +22,7 @@ func GetClients(api *sensu.API, limit int, offset int) string {
 		table.AddRow(
 			client.Name,
 			client.Address,
-			client.Timestamp,
+			utoa(client.Timestamp),
 		)
 	}
 
@@ -56,7 +56,7 @@ func GetClientsWildcard(api *sensu.API, pattern string) string {
 		table.AddRow(
 			client.Name,
 			client.Address,
-			client.Timestamp,
+			utoa(client.Timestamp),
 		)
 	}
 
