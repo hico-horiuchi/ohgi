@@ -13,6 +13,10 @@ type StashStruct struct {
 }
 
 // Returns a list of stashes.
+//
+//   limit:  The number of stashes to return.
+//   offset: The number of stashes to offset before returning items.
+//
 func (api API) GetStashes(stashes interface{}, limit int, offset int) error {
 	response, err := api.get(fmt.Sprintf("/stashes?limit=%d&offset=%d", limit, offset))
 	if err != nil {

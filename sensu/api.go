@@ -1,7 +1,5 @@
-/*
-The Sensu API provides access to the data that Sensu servers collect, such as client information & current events.
-The API can be used to resolve events and request check executions, among other things.
-*/
+// The Sensu API provides access to the data that Sensu servers collect, such as client information & current events.
+// The API can be used to resolve events and request check executions, among other things.
 package sensu
 
 import (

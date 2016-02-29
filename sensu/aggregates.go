@@ -26,6 +26,10 @@ type AggregateStruct struct {
 }
 
 // Returns the list of aggregates.
+//
+//   limit:  The number of aggregates to return.
+//   offset: The number of aggregates to offset before returning items.
+//
 func (api API) GetAggregates(limit int, offset int) ([]AggregateList, error) {
 	var aggregates []AggregateList
 
@@ -45,6 +49,9 @@ func (api API) GetAggregates(limit int, offset int) ([]AggregateList, error) {
 }
 
 // Returns the list of aggregates for a given check.
+//
+//   age: The number of seconds old an aggregate must be to be listed.
+//
 func (api API) GetAggregatesCheck(check string, age int) ([]int64, error) {
 	var issues []int64
 
@@ -76,6 +83,10 @@ func (api API) DeleteAggregatesCheck(check string) error {
 }
 
 // Returns an aggregate.
+//
+//   summarize: Summarizes the output field in the event data. (summarize=output)
+//   result:    Return the raw result data.
+//
 func (api API) GetAggregatesCheckIssued(check string, issued int64, summarize string, results bool) (AggregateStruct, error) {
 	var aggregate AggregateStruct
 

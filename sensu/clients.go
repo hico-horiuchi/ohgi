@@ -16,6 +16,10 @@ type ClientStruct struct {
 }
 
 // Returns a list of clients.
+//
+//   limit:  The number of clients to return.
+//   offset: The number of clients to offset before returning items.
+//
 func (api API) GetClients(limit int, offset int) ([]ClientStruct, error) {
 	var clients []ClientStruct
 
