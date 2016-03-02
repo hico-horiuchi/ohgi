@@ -1,4 +1,4 @@
-## ohgi v0.5.1
+## ohgi v0.5.1 [![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi)
 
 ![image.gif](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.gif)
 
@@ -9,8 +9,7 @@
 
 #### Documents
 
-  - [github.com/hico-horiuchi/ohgi/ohgi](http://godoc.org/github.com/hico-horiuchi/ohgi/ohgi) [![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi)
-  - [github.com/hico-horiuchi/ohgi/sensu](http://godoc.org/github.com/hico-horiuchi/ohgi/sensu) [![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgi/sensu?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgi/sensu)
+  - [github.com/hico-horiuchi/ohgi/ohgi](http://godoc.org/github.com/hico-horiuchi/ohgi/ohgi) 
 
 #### Installation
 

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hico-horiuchi/ohgi/sensu"
+	"github.com/hico-horiuchi/ohgibone/sensu"
 )
 
 func GetChecks(api *sensu.API) string {

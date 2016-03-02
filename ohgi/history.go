@@ -3,7 +3,7 @@ package ohgi
 import (
 	"fmt"
 
-	"github.com/hico-horiuchi/ohgi/sensu"
+	"github.com/hico-horiuchi/ohgibone/sensu"
 )
 
 func GetClientsHistory(api *sensu.API, client string) string {

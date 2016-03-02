@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/hico-horiuchi/ohgi/ohgi"
-	"github.com/hico-horiuchi/ohgi/sensu"
+	"github.com/hico-horiuchi/ohgibone/sensu"
 	"github.com/spf13/cobra"
 )
 

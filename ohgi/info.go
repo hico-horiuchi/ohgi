@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/hico-horiuchi/ohgi/sensu"
+	"github.com/hico-horiuchi/ohgibone/sensu"
 )
 
 func GetInfo(api *sensu.API) string {

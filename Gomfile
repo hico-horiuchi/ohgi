@@ -1,4 +1,5 @@
 gom 'github.com/fatih/color'
+gom 'github.com/hico-horiuchi/ohgibone/sensu'
 gom 'github.com/hico-horiuchi/uitable'
 gom 'github.com/mattn/go-isatty'
 gom 'github.com/spf13/cobra'
