@@ -41,7 +41,7 @@ func GetAggregatesCheck(api *sensu.API, check string, age int) string {
 	for _, issued := range issues {
 		table.AddRow(
 			utoa(issued),
-			strconv.FormatInt(issued, 10),
+			issued,
 		)
 	}
 

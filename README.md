@@ -1,4 +1,6 @@
-## ohgi v0.5.1 [![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi)
+## ohgi v0.5.1
+
+[![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi) [![Circle CI](https://circleci.com/gh/hico-horiuchi/ohgi.svg?style=shield)](https://circleci.com/gh/hico-horiuchi/ohgi)
 
 ![image.gif](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.gif)
 

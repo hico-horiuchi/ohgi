@@ -1,0 +1,20 @@
+---
+machine:
+  timezone:
+    Asia/Tokyo
+  environment:
+    version: v0.5.1
+dependencies:
+  override:
+    - make gom
+    - mkdir -p /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi
+    - if [ ! -d /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi ]; then ln -s $(pwd) /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi; fi
+test:
+  override:
+    - gom test ./...
+deployment:
+  release:
+    tag: /v[0-9]+\.[0-9]+\.[0-9]+/
+    commands:
+      - make release
+      - gom exec ghr -u hico-horiuchi --replace ${version} bin/${version}

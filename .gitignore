@@ -5,3 +5,4 @@
 /_vendor
 /.vendor
 /bin/ohgi*
+/bin/v*
