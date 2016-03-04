@@ -3,7 +3,7 @@ machine:
   timezone:
     Asia/Tokyo
   environment:
-    version: v0.5.1
+    version: v0.5.2
 dependencies:
   override:
     - make gom
