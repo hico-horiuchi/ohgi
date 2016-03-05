@@ -8,7 +8,7 @@ dependencies:
   override:
     - make gom
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi
-    - if [ ! -d /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi ]; then ln -s $(pwd) /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi; fi
+    - if [ ! -d /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi/ohgi ]; then ln -s $(pwd) /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi/ohgi; fi
 test:
   override:
     - gom test ./...
