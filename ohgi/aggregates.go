@@ -9,19 +9,19 @@ import (
 )
 
 func GetAggregates(api *sensu.API, limit int, offset int) string {
-	aggregates, err := api.GetAggregates(limit, offset)
+	issues, err := api.GetAggregates(limit, offset)
 	checkError(err)
 
-	if len(aggregates) == 0 {
+	if len(issues) == 0 {
 		return "No aggregates\n"
 	}
 
 	table := newUitable()
 	table.AddRow(bold("CHECK"), bold("ISSUES"))
-	for _, aggregate := range aggregates {
+	for _, issue := range issues {
 		table.AddRow(
-			aggregate.Check,
-			strconv.Itoa(len(aggregate.Issued)),
+			issue.Check,
+			strconv.Itoa(len(issue.Issued)),
 		)
 	}
 
