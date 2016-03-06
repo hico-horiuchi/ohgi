@@ -79,7 +79,7 @@ func PostSilence(api *sensu.API, client string, check string, expiration string,
 		},
 	}
 
-	err := api.PostStashes(silence)
+	err := api.PostStashes(&silence)
 	checkError(err)
 
 	return "Created\n"
