@@ -7,11 +7,12 @@ machine:
 dependencies:
   override:
     - make gom
+test:
+  pre:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi
     - if [ ! -d /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi/ohgi ]; then ln -s $(pwd) /home/ubuntu/.go_workspace/src/github.com/hico-horiuchi/ohgi; fi
-test:
   override:
-    - gom test ./...
+    - gom test -v -race ./...
 deployment:
   release:
     tag: /v[0-9]+\.[0-9]+\.[0-9]+/
