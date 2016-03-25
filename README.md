@@ -1,8 +1,8 @@
-## ohgi v0.5.2
+## <img src="https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/logo.png" alt="logo.png" width="60" height="29"> ohgi v0.5.2
 
 [![GoDoc](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi?status.svg)](https://godoc.org/github.com/hico-horiuchi/ohgi/ohgi) [![Circle CI](https://circleci.com/gh/hico-horiuchi/ohgi.svg?style=shield)](https://circleci.com/gh/hico-horiuchi/ohgi)
 
-![image.gif](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/image.gif)
+![screen.gif](https://raw.githubusercontent.com/hico-horiuchi/ohgi/master/screen.gif)
 
 #### Requirements
 
