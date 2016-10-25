@@ -11,6 +11,9 @@ run:
 fmt:
 	gom exec goimports -w *.go ohgi/*.go
 
+test:
+	gom test -v -cover -race github.com/hico-horiuchi/ohgi/ohgi
+
 build: fmt
 	gom build $(GO_BUILDOPT) -o bin/ohgi main.go
 
