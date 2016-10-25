@@ -35,11 +35,11 @@ clean:
 
 link:
 	mkdir -p $(GOPATH)/src/github.com/hico-horiuchi
-	ln -s $(CURDIR) $(GOPATH)/src/github.com/hico-horiuchi/ohgi
+	if [ ! -d $(GOPATH)/src/github.com/hico-horiuchi/ohgi ]; then ln -s $(CURDIR) $(GOPATH)/src/github.com/hico-horiuchi/ohgi; fi
 
 unlink:
 	rm $(GOPATH)/src/github.com/hico-horiuchi/ohgi
-	rmdir $(GOPATH)/src/github.com/hico-horiuchi
+	if [ -z "`ls $(GOPATH)/src/github.com/hico-horiuchi`" ]; then rmdir $(GOPATH)/src/github.com/hico-horiuchi; fi
 
 install: build
 	cp bin/ohgi /usr/local/bin/
