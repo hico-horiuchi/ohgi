@@ -3,6 +3,6 @@
 *#*
 .DS_Store
 /_vendor
-/.vendor
+/vendor
 /bin/ohgi*
 /bin/v*
